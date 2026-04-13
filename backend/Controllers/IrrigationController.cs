@@ -1,9 +1,10 @@
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using AquasenseApi.Data;
 using AquasenseApi.Models;
+using AquasenseApi.Services;
 
 namespace AquasenseApi.Controllers;
 
@@ -13,10 +14,12 @@ namespace AquasenseApi.Controllers;
 public class IrrigationController : ControllerBase
 {
     private readonly AquasenseDbContext _context;
+    private readonly IIrrigationService _irrigationService;
 
-    public IrrigationController(AquasenseDbContext context)
+    public IrrigationController(AquasenseDbContext context, IIrrigationService irrigationService)
     {
         _context = context;
+        _irrigationService = irrigationService;
     }
 
     [HttpPost("farms/{farmId}/irrigate")]
@@ -27,35 +30,18 @@ public class IrrigationController : ControllerBase
             return Forbid();
         }
 
-        // TODO: In production, send signal to ESP32 via MQTT/Webhook
-        var @event = new IrrigationEvent
-        {
-            FarmId = farmId,
-            TriggerType = request.Manual ? "manual" : "automatic",
-            StartTime = DateTime.UtcNow,
-            WaterUsed = request.EstimatedLitres,
-            Status = "active"
-        };
-
-        _context.IrrigationEvents.Add(@event);
-
-        if (request.Manual)
-        {
-            var alert = new SystemAlert
-            {
-                FarmId = farmId,
-                AlertType = "manual_irrigation",
-                Message = $"Manual irrigation started: {request.Duration}min, {request.EstimatedLitres}L"
-            };
-            _context.SystemAlerts.Add(alert);
-        }
-
-        await _context.SaveChangesAsync();
+        var irrigationEvent = await _irrigationService.TriggerIrrigationAsync(
+            farmId,
+            request.Manual,
+            request.Duration,
+            request.EstimatedLitres);
 
         return Ok(new
         {
-            message = "Irrigation event logged",
-            eventId = @event.EventId
+            message = "Irrigation event created",
+            eventId = irrigationEvent.EventId,
+            triggerType = irrigationEvent.TriggerType,
+            startedAt = irrigationEvent.StartTime
         });
     }
 

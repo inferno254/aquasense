@@ -46,7 +46,7 @@ public class AuthController : ControllerBase
         return Ok(new
         {
             token,
-            user = new { user.UserId, user.Name, user.Email, user.Role },
+            user = new { user.UserId, user.Name, user.Email, user.Phone, user.Role },
             farms,
             message = "Login successful"
         });
@@ -70,6 +70,7 @@ public class AuthController : ControllerBase
             UserId = Guid.NewGuid(),
             Name = registerDto.Name,
             Email = registerDto.Email,
+            Phone = registerDto.Phone,
             PasswordHash = BCrypt.Net.BCrypt.HashPassword(registerDto.Password),
             Role = "farmer"
         };
@@ -91,7 +92,7 @@ public class AuthController : ControllerBase
         return Ok(new
         {
             token,
-            user = new { newUser.UserId, newUser.Name, newUser.Email, newUser.Role },
+            user = new { newUser.UserId, newUser.Name, newUser.Email, newUser.Phone, newUser.Role },
             farms = new[] { new { farm.FarmId, farm.Location, farm.CropType, farm.Size } },
             message = "Registration successful"
         });

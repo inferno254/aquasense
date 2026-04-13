@@ -104,11 +104,12 @@
       <div class="card controls">
         <h3>Manual Controls</h3>
         <button class="btn control-btn irrigate" onclick="triggerIrrigation();">Irrigate Now</button>
+        <button class="btn control-btn simulate" onclick="simulateSensorReading();">Simulate Sensor Update</button>
         <button class="btn control-btn pause" disabled>Pause Auto</button>
         <div class="toggle">
           <label>Auto Mode</label>
           <label class="switch">
-            <input type="checkbox" checked>
+            <input type="checkbox" checked disabled>
             <span class="slider"></span>
           </label>
         </div>
@@ -222,6 +223,7 @@
             document.querySelector('.moisture').textContent = (data.latest.SoilMoisture ?? 0).toFixed(1) + '%';
             document.querySelector('.temp').textContent = (data.latest.Temperature ?? 0).toFixed(1) + '°C';
             document.querySelector('.humidity').textContent = (data.latest.Humidity ?? 0).toFixed(0) + '%';
+            updateLastSync();
           }
           if (data.all && data.all.length > 0) {
             updateChart(data.all);
@@ -229,6 +231,7 @@
         } else {
           console.log('API not available or unauthorized, using demo data');
           fallbackSensorValues();
+          updateLastSync();
         }
       } catch (error) {
         console.log('API error, using demo data', error);

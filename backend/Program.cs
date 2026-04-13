@@ -4,6 +4,7 @@ using Microsoft.IdentityModel.Tokens;
 using Npgsql;
 using System.Text;
 using AquasenseApi.Data;
+using AquasenseApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -92,6 +93,10 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowAll", policy =>
         policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 });
+
+builder.Services.AddHttpClient();
+builder.Services.AddScoped<INotificationService, NotificationService>();
+builder.Services.AddScoped<IIrrigationService, IrrigationService>();
 
 // Scoped registration for controllers
 builder.Services.AddScoped<AquasenseDbContext>();

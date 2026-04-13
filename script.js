@@ -120,6 +120,7 @@ async function handleRegister(e) {
 
   const name = document.getElementById('registerName')?.value?.trim();
   const email = document.getElementById('registerEmail')?.value?.trim();
+  const phone = document.getElementById('registerPhone')?.value?.trim();
   const password = document.getElementById('registerPassword')?.value;
   const confirm = document.getElementById('registerConfirm')?.value;
   const notice = document.getElementById('registerNotice');
@@ -152,7 +153,7 @@ async function handleRegister(e) {
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ name, email, password })
+      body: JSON.stringify({ name, email, phone, password })
     });
 
     if (response.ok) {
@@ -174,7 +175,7 @@ async function handleRegister(e) {
     showFormNotice(notice, errorData?.message || 'Registration failed. Please try again.', 'error');
   } catch (error) {
     // Fallback to local registration if backend is unavailable
-    saveLocalUser({ name, email, password });
+    saveLocalUser({ name, email, phone, password });
     showFormNotice(notice, 'Offline registration complete. Please login locally.', 'success');
     setTimeout(() => window.location.href = 'login.html', 1400);
   } finally {

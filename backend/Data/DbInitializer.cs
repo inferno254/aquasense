@@ -30,6 +30,7 @@ public static class DbInitializer
             UserId = Guid.Parse("11111111-1111-1111-1111-111111111111"),
             Name = "Aqua Farmer",
             Email = "farmer@kenya.com",
+            Phone = "+254712345678",
             PasswordHash = BCrypt.Net.BCrypt.HashPassword("irrigate2024"),
             Role = "farmer"
         };
