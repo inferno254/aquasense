@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register - AquaSense</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="index.html" class="logo">
+        <i class="fas fa-seedling"></i> AquaSense
+      </a>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="problem.html">Problem</a></li>
+        <li><a href="features.html">Features</a></li>
+        <li><a href="how.html">How It Works</a></li>
+        <li><a href="tech.html">Tech</a></li>
+        <li><a href="research.html">Research</a></li>
+        <li><a href="demo.html">Demo</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li><a href="login.html">Login</a></li>
+        <li><a href="register.html" class="active">Register</a></li>
+      </ul>
+      <div class="auth-nav">
+        <a href="login.html" class="login-icon" title="Login">
+          <i class="fas fa-user-circle"></i>
+        </a>
+      </div>
+      <div class="hamburger">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </nav>
+  </header>
+
+  <section class="hero login-hero">
+    <div class="login-container">
+      <div class="login-card">
+        <div class="login-header">
+          <i class="fas fa-seedling login-icon-large"></i>
+          <h1>Create Account</h1>
+          <p>Register for your AquaSense dashboard</p>
+        </div>
+
+        <form id="registerForm" class="login-form">
+          <div class="form-group">
+            <div class="input-group">
+              <i class="fas fa-user input-icon"></i>
+              <input type="text" id="registerName" placeholder="Full Name" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="input-group">
+              <i class="fas fa-envelope input-icon"></i>
+              <input type="email" id="registerEmail" placeholder="Email" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="input-group">
+              <i class="fas fa-lock input-icon"></i>
+              <input type="password" id="registerPassword" placeholder="Password" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="input-group">
+              <i class="fas fa-lock input-icon"></i>
+              <input type="password" id="registerConfirm" placeholder="Confirm Password" required>
+            </div>
+          </div>
+          <button type="submit" class="btn login-btn">
+            <span id="registerText">Register</span>
+            <div class="spinner" id="registerSpinner" style="display:none;"></div>
+          </button>
+          <div class="form-notice" id="registerNotice" style="display:none;"></div>
+        </form>
+
+        <div class="login-footer">
+          <p>Already have an account? <a href="login.html">Sign in</a></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-links">
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="problem.html">Problem</a>
+      <a href="features.html">Features</a>
+      <a href="how.html">How It Works</a>
+      <a href="tech.html">Tech</a>
+      <a href="research.html">Research</a>
+      <a href="demo.html">Demo</a>
+      <a href="contact.html">Contact</a>
+      <a href="login.html">Login</a>
+      <a href="register.html">Register</a>
+    </div>
+    <p>&copy; 2026 Lewis Ondigi Abuga | The Cooperative University of Kenya</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard Demo - AquaSense</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="index.html" class="logo">
+        <i class="fas fa-seedling"></i> AquaSense
+      </a>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="problem.html">Problem</a></li>
+        <li><a href="features.html">Features</a></li>
+        <li><a href="how.html">How It Works</a></li>
+        <li><a href="tech.html">Tech</a></li>
+        <li><a href="research.html">Research</a></li>
+        <li><a href="demo.html" class="active">Demo</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li><a href="login.html">Login</a></li>
+        <li><a href="register.html">Register</a></li>
+      </ul>
+      <div class="auth-nav">
+        <a href="login.html" class="login-icon" title="Admin - Dashboard">
+          <i class="fas fa-user-check"></i>
+        </a>
+      </div>
+      <div class="hamburger">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </nav>
+  </header>
+
+  <div class="dashboard">
+    <div class="dashboard-header">
+      <div>
+        <p class="dashboard-welcome">Welcome back, <span class="user-name">farmer</span></p>
+        <h1>Field 1 Dashboard</h1>
+        <div class="dashboard-meta">
+          <span class="farm-location">Field 1</span>
+          <span class="farm-crop">Crop: Maize</span>
+        </div>
+        <div class="farm-selector">
+          <label for="farmSelect">Active Farm</label>
+          <select id="farmSelect"></select>
+        </div>
+      </div>
+      <div class="status-indicators">
+        <div class="status online">
+          <i class="fas fa-circle"></i>
+          Online
+        </div>
+        <div class="status last-update">
+          Last: 2min ago
+        </div>
+      </div>
+    </div>
+
+    <div class="dashboard-grid">
+      <!-- Live Sensors -->
+      <div class="card live-sensors">
+        <h3>Live Readings</h3>
+        <div class="sensor-grid">
+          <div class="sensor-item">
+            <i class="fas fa-tint"></i>
+            <span class="sensor-value moisture">28%</span>
+            <span>Soil Moisture</span>
+          </div>
+          <div class="sensor-item">
+            <i class="fas fa-thermometer-half"></i>
+            <span class="sensor-value temp">26.4°C</span>
+            <span>Temperature</span>
+          </div>
+          <div class="sensor-item">
+            <i class="fas fa-tint-drop"></i>
+            <span class="sensor-value humidity">68%</span>
+            <span>Humidity</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent Activity -->
+      <div class="card recent-activity">
+        <h3>Recent Activity</h3>
+        <ul>
+          <li><i class="fas fa-play"></i> Irrigation: 12min (Zone 1)</li>
+          <li><i class="fas fa-bell"></i> Moisture low alert</li>
+          <li><i class="fas fa-bolt"></i> Battery: 87%</li>
+          <li><i class="fas fa-sync"></i> Data synced</li>
+        </ul>
+      </div>
+
+      <!-- Controls -->
+      <div class="card controls">
+        <h3>Manual Controls</h3>
+        <button class="btn control-btn irrigate" onclick="triggerIrrigation();">Irrigate Now</button>
+        <button class="btn control-btn pause" disabled>Pause Auto</button>
+        <div class="toggle">
+          <label>Auto Mode</label>
+          <label class="switch">
+            <input type="checkbox" checked>
+            <span class="slider"></span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Event feed -->
+      <div class="card recent-events">
+        <h3>Recent Irrigation Events</h3>
+        <ul class="event-list">
+          <li>Loading events...</li>
+        </ul>
+      </div>
+
+      <!-- Alerts feed -->
+      <div class="card system-alerts">
+        <h3>Recent System Alerts</h3>
+        <ul class="alert-list">
+          <li>Loading alerts...</li>
+        </ul>
+      </div>
+
+      <!-- Charts -->
+      <div class="card chart-card">
+        <h3>24hr Moisture Trend</h3>
+        <canvas id="moistureChart" height="200"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-links">
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="problem.html">Problem</a>
+      <a href="features.html">Features</a>
+      <a href="how.html">How It Works</a>
+      <a href="tech.html">Tech</a>
+      <a href="research.html">Research</a>
+      <a href="contact.html">Contact</a>
+      <a href="#" onclick="logout(); return false;">Logout</a>
+      <a href="register.html">Register</a>
+    </div>
+    <p>&copy; 2026 Lewis Ondigi Abuga | Live Demo</p>
+  </footer>
+
+  <script src="script.js"></script>
+  <script>
+    const auth = getAuthData();
+    if (!auth?.loggedIn) {
+      window.location.href = 'login.html';
+    }
+
+    let selectedFarmId = auth?.farmId || '550e8400-e29b-41d4-a716-446655440002';
+    const apiBase = window.apiBase || 'http://localhost:5000/api';
+
+    function getActiveFarm() {
+      if (!auth?.farms?.length) {
+        return { FarmId: selectedFarmId, Location: 'Field 1', CropType: 'Unknown' };
+      }
+      return auth.farms.find(f => f.FarmId === selectedFarmId) || auth.farms[0];
+    }
+
+    function populateFarmSelector() {
+      const farmSelect = document.getElementById('farmSelect');
+      if (!farmSelect) return;
+      if (!auth?.farms?.length) {
+        farmSelect.innerHTML = `<option value="${selectedFarmId}">Field 1</option>`;
+        return;
+      }
+      farmSelect.innerHTML = auth.farms.map(f => `<option value="${f.FarmId}">${f.Location} (${f.CropType || 'Farm'})</option>`).join('');
+      if (!auth.farms.some(f => f.FarmId === selectedFarmId)) {
+        selectedFarmId = auth.farms[0].FarmId;
+      }
+      farmSelect.value = selectedFarmId;
+      farmSelect.addEventListener('change', (event) => {
+        selectedFarmId = event.target.value;
+        updateDashboardTitle();
+        updateSensors();
+        updateEvents();
+        updateAlerts();
+      });
+    }
+
+    function updateDashboardTitle() {
+      const heading = document.querySelector('.dashboard-header h1');
+      const userName = document.querySelector('.user-name');
+      const farmLocation = document.querySelector('.farm-location');
+      const farmCrop = document.querySelector('.farm-crop');
+      const farm = getActiveFarm();
+      if (userName) {
+        userName.textContent = auth?.user?.name || auth?.user?.email || 'farmer';
+      }
+      if (farmLocation) {
+        farmLocation.textContent = farm.Location || 'Field 1';
+      }
+      if (farmCrop) {
+        farmCrop.textContent = farm.CropType ? `Crop: ${farm.CropType}` : 'Crop: Unknown';
+      }
+      if (!heading) return;
+      heading.textContent = `${farm.Location || 'Field 1'} Dashboard`;
+    }
+
+    populateFarmSelector();
+
+    async function updateSensors() {
+      try {
+        const response = await fetchWithAuth(`${apiBase}/data/farms/${farmId}/sensors?hours=24`);
+        if (response.ok) {
+          const data = await response.json();
+          if (data.latest) {
+            document.querySelector('.moisture').textContent = (data.latest.SoilMoisture ?? 0).toFixed(1) + '%';
+            document.querySelector('.temp').textContent = (data.latest.Temperature ?? 0).toFixed(1) + '°C';
+            document.querySelector('.humidity').textContent = (data.latest.Humidity ?? 0).toFixed(0) + '%';
+          }
+          if (data.all && data.all.length > 0) {
+            updateChart(data.all);
+          }
+        } else {
+          console.log('API not available or unauthorized, using demo data');
+          fallbackSensorValues();
+        }
+      } catch (error) {
+        console.log('API error, using demo data', error);
+        fallbackSensorValues();
+      }
+    }
+
+    function fallbackSensorValues() {
+      document.querySelector('.moisture').textContent = (25 + Math.random() * 8).toFixed(1) + '%';
+      document.querySelector('.temp').textContent = (25 + Math.random() * 3).toFixed(1) + '°C';
+      document.querySelector('.humidity').textContent = (65 + Math.random() * 10).toFixed(0) + '%';
+    }
+
+    function updateChart(readings) {
+      const ctx = document.getElementById('moistureChart')?.getContext('2d');
+      if (ctx && readings.length > 0) {
+        const labels = readings.slice(-7).map(r => new Date(r.Timestamp).toLocaleTimeString());
+        const data = readings.slice(-7).map(r => r.SoilMoisture ?? 0);
+        new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels: labels,
+            datasets: [{
+              label: 'Soil Moisture %',
+              data: data,
+              borderColor: '#4CAF50',
+              backgroundColor: 'rgba(76, 175, 80, 0.1)',
+              tension: 0.4,
+              fill: true
+            }]
+          },
+          options: {
+            responsive: true,
+            plugins: { legend: { display: false } },
+            scales: {
+              y: { beginAtZero: true, max: 100 }
+            }
+          }
+        });
+      }
+    }
+
+    async function updateEvents() {
+      const eventList = document.querySelector('.event-list');
+      if (!eventList) return;
+
+      try {
+        const response = await fetchWithAuth(`${apiBase}/data/farms/${farmId}/events?limit=5`);
+        if (response.ok) {
+          const events = await response.json();
+          eventList.innerHTML = events.map(event => `
+            <li><i class="fas fa-check-circle"></i> ${event.triggerType.replace(/\b\w/g, c => c.toUpperCase())}: ${new Date(event.startTime).toLocaleTimeString()} (${event.duration ?? 'n/a'} min)` +
+            `</li>`
+          ).join('');
+          return;
+        }
+      } catch (error) {
+        console.warn('Failed to load events from API', error);
+      }
+
+      const fallbackEvents = [
+        'Irrigation started in Zone 1',
+        'Moisture level stabilized',
+        'Valve cycle completed',
+        'Data sync complete'
+      ];
+      eventList.innerHTML = fallbackEvents.map(event => `<li><i class="fas fa-check-circle"></i> ${event}</li>`).join('');
+    }
+
+    async function updateAlerts() {
+      const alertList = document.querySelector('.alert-list');
+      if (!alertList) return;
+
+      try {
+        const response = await fetchWithAuth(`${apiBase}/data/farms/${farmId}/alerts?resolved=false`);
+        if (response.ok) {
+          const alerts = await response.json();
+          alertList.innerHTML = alerts.map(alert => `
+            <li><i class="fas fa-exclamation-circle"></i> ${alert.message} <span class="alert-meta">(${new Date(alert.timestamp).toLocaleTimeString()})</span></li>
+          `).join('');
+          return;
+        }
+      } catch (error) {
+        console.warn('Failed to load alerts from API', error);
+      }
+
+      const fallbackAlerts = [
+        'Low moisture alert triggered',
+        'Pump health nominal',
+        'Battery level stable'
+      ];
+      alertList.innerHTML = fallbackAlerts.map(alert => `<li><i class="fas fa-exclamation-circle"></i> ${alert}</li>`).join('');
+    }
+
+    async function triggerIrrigation() {
+      try {
+        const response = await fetchWithAuth(`${apiBase}/irrigation/farms/${farmId}/irrigate`, {
+          method: 'POST',
+          body: JSON.stringify({ manual: true, duration: 12, estimatedLitres: 420 }),
+          headers: { 'Content-Type': 'application/json' }
+        });
+
+        if (response.ok) {
+          await updateEvents();
+          await updateAlerts();
+          alert('✅ Irrigation command sent to the backend. Event has been logged.');
+          return;
+        }
+      } catch (error) {
+        console.warn('Irrigation API failed', error);
+      }
+
+      alert('Irrigation command sent locally. Backend unavailable.');
+    }
+
+    updateDashboardTitle();
+    updateSensors();
+    updateEvents();
+    updateAlerts();
+    setInterval(() => {
+      updateSensors();
+      updateEvents();
+      updateAlerts();
+    }, 30000);
+  </script>
+</body>
+</html>

@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tech Stack - AquaSense</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="index.html" class="logo">
+        <i class="fas fa-seedling"></i> AquaSense
+      </a>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="problem.html">Problem</a></li>
+        <li><a href="features.html">Features</a></li>
+        <li><a href="how.html">How It Works</a></li>
+        <li><a href="tech.html" class="active">Tech</a></li>
+        <li><a href="research.html">Research</a></li>
+        <li><a href="demo.html">Demo</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li><a href="login.html">Login</a></li>
+        <li><a href="register.html">Register</a></li>
+      </ul>
+      <div class="auth-nav">
+        <a href="login.html" class="login-icon" title="Sign In">
+          <i class="fas fa-user-circle"></i>
+        </a>
+      </div>
+      <div class="hamburger">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </nav>
+  </header>
+
+  <section class="hero hero-small">
+    <div class="container">
+      <h1>Technology Stack</h1>
+      <p>Modern IoT for rural Kenya</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2 class="section-title">Hardware Architecture</h2>
+    <div class="tech-grid">
+      <div class="tech-card">
+        <i class="fas fa-microchip tech-icon"></i>
+        <h3>ESP32 Microcontroller</h3>
+        <p>WiFi + Bluetooth + GPIO pins + Low power + Arduino compatible</p>
+      </div>
+      <div class="tech-card">
+        <i class="fas fa-tint tech-icon"></i>
+        <h3>Capacitive Sensors</h3>
+        <p>Soil moisture (0-100%) + Temperature + Humidity + Stainless probes</p>
+      </div>
+      <div class="tech-card">
+        <i class="fas fa-bolt tech-icon"></i>
+        <h3>Solar Power</h3>
+        <p>10W panel + 12V 7Ah battery + MPPT charge controller + 48hr autonomy</p>
+      </div>
+      <div class="tech-card">
+        <i class="fas fa-cogs tech-icon"></i>
+        <h3>Solenoid Valve</h3>
+        <p>12V DC + 1" pipe + 0.2-0.8MPa + IP67 waterproof</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="background: var(--light-bg);">
+    <h2 class="section-title">Software Stack</h2>
+    <div class="tech-stack">
+      <div class="stack-item">
+        <img src="https://via.placeholder.com/100x50/1976D2/ffffff?text=Node.js" alt="Node.js">
+        <h4>Backend API</h4>
+        <p>REST endpoints + Real-time WebSocket</p>
+      </div>
+      <div class="stack-item">
+        <img src="https://via.placeholder.com/100x50/336791/ffffff?text=PostgreSQL" alt="PostgreSQL">
+        <h4>Database</h4>
+        <p>Timeseries data + Sensor logs + User profiles</p>
+      </div>
+      <div class="stack-item">
+        <img src="https://via.placeholder.com/100x50/4CAF50/ffffff?text=React" alt="React">
+        <h4>Frontend</h4>
+        <p>Dashboard + Charts + Mobile PWA</p>
+      </div>
+      <div class="stack-item">
+        <img src="https://via.placeholder.com/100x50/FF5722/ffffff?text=SMS" alt="SMS">
+        <h4>SMS Gateway</h4>
+        <p>Africa's Talking API + Bulk messaging</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2 class="section-title">Security & Reliability</h2>
+    <div class="features-grid">
+      <div class="feature-card">
+        <i class="fas fa-shield-alt"></i>
+        <h3>Secure</h3>
+        <p>JWT auth + HTTPS + Rate limiting + Input sanitization</p>
+      </div>
+      <div class="feature-card">
+        <i class="fas fa-battery-full"></i>
+        <h3>Reliable</h3>
+        <p>Watchdog timer + OTA updates + Offline queueing</p>
+      </div>
+      <div class="feature-card">
+        <i class="fas fa-mobile-alt"></i>
+        <h3>Offline</h3>
+        <p>PWA + Service Worker + Local data sync</p>
+      </div>
+    </div>
+  </section>
+
+  <a href="demo.html" class="btn fixed-btn">Live Demo</a>
+
+  <footer>
+    <div class="footer-links">
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="problem.html">Problem</a>
+      <a href="features.html">Features</a>
+      <a href="how.html">How It Works</a>
+      <a href="tech.html">Tech</a>
+      <a href="research.html">Research</a>
+      <a href="demo.html">Demo</a>
+      <a href="contact.html">Contact</a>
+      <a href="login.html">Login</a>
+      <a href="register.html">Register</a>
+    </div>
+    <p>&copy; 2026 Lewis Ondigi Abuga | The Cooperative University of Kenya</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

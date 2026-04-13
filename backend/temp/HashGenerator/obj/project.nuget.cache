@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "OBew1JKb1gc=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\Inferno\\aquasense\\backend\\temp\\HashGenerator\\HashGenerator.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Inferno\\.nuget\\packages\\bcrypt.net-next\\4.0.3\\bcrypt.net-next.4.0.3.nupkg.sha512"
+  ],
+  "logs": []
+}

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact - AquaSense</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="index.html" class="logo">
+        <i class="fas fa-seedling"></i> AquaSense
+      </a>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="problem.html">Problem</a></li>
+        <li><a href="features.html">Features</a></li>
+        <li><a href="how.html">How It Works</a></li>
+        <li><a href="tech.html">Tech</a></li>
+        <li><a href="research.html">Research</a></li>
+        <li><a href="demo.html">Demo</a></li>
+        <li><a href="contact.html" class="active">Contact</a></li>
+        <li><a href="login.html">Login</a></li>
+        <li><a href="register.html">Register</a></li>
+      </ul>
+      <div class="auth-nav">
+        <a href="login.html" class="login-icon" title="Sign In">
+          <i class="fas fa-user-circle"></i>
+        </a>
+      </div>
+      <div class="hamburger">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </nav>
+  </header>
+
+  <section class="hero hero-small">
+    <div class="container">
+      <h1>Get In Touch</h1>
+      <p>Talk to us about your farm</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2 class="section-title">Contact Information</h2>
+    <div class="contact-grid">
+      <div class="contact-card">
+        <i class="fas fa-envelope"></i>
+        <h3>Email</h3>
+        <p>info@aquasense.co.ke</p>
+        <a href="mailto:info@aquasense.co.ke">Send Message</a>
+      </div>
+      <div class="contact-card">
+        <i class="fas fa-phone"></i>
+        <h3>Phone</h3>
+        <p>+254 700 123 456</p>
+        <a href="tel:+254700123456">Call Now</a>
+      </div>
+      <div class="contact-card">
+        <i class="fas fa-map-marker-alt"></i>
+        <h3>Location</h3>
+        <p>The Cooperative University<br>Machakos Campus<br>Kenya</p>
+      </div>
+      <div class="contact-card">
+        <i class="fas fa-clock"></i>
+        <h3>Support</h3>
+        <p>Mon-Fri 8AM-6PM<br>SMS alerts 24/7</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="background: var(--light-bg);">
+    <h2 class="section-title">Send Message</h2>
+    <form id="contactForm" class="contact-form">
+      <div class="grid-2 gap-4">
+        <div class="form-group">
+          <input type="text" id="contactName" placeholder="Your Name" required>
+        </div>
+        <div class="form-group">
+          <input type="email" id="contactEmail" placeholder="Your Email" required>
+        </div>
+      </div>
+      <div class="form-group">
+        <input type="tel" id="contactPhone" placeholder="Phone (optional)">
+      </div>
+      <div class="form-group">
+        <textarea id="contactMessage" rows="6" placeholder="Tell us about your farm and irrigation needs"></textarea>
+      </div>
+      <button type="submit" class="btn">Send Message</button>
+      <div class="form-notice" id="contactNotice" style="display:none;"></div>
+    </form>
+  </section>
+
+  <a href="login.html" class="btn fixed-btn">Login to Dashboard</a>
+
+  <footer>
+    <div class="footer-links">
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="problem.html">Problem</a>
+      <a href="features.html">Features</a>
+      <a href="how.html">How It Works</a>
+      <a href="tech.html">Tech</a>
+      <a href="research.html">Research</a>
+      <a href="demo.html">Demo</a>
+      <a href="contact.html">Contact</a>
+      <a href="login.html">Login</a>
+      <a href="register.html">Register</a>
+    </div>
+    <p>&copy; 2026 Lewis Ondigi Abuga | The Cooperative University of Kenya</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

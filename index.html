@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AquaSense - Smart Irrigation for Kenya's Farmers</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="index.html" class="logo">
+        <i class="fas fa-seedling"></i> AquaSense
+      </a>
+      <ul class="nav-links">
+        <li><a href="index.html" class="active">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="problem.html">Problem</a></li>
+        <li><a href="features.html">Features</a></li>
+        <li><a href="how.html">How It Works</a></li>
+        <li><a href="tech.html">Tech</a></li>
+        <li><a href="research.html">Research</a></li>
+        <li><a href="demo.html">Demo</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li><a href="login.html">Login</a></li>
+        <li><a href="register.html">Register</a></li>
+      </ul>
+      <div class="auth-nav">
+        <a href="login.html" class="login-icon" title="Sign In">
+          <i class="fas fa-user-circle"></i>
+        </a>
+      </div>
+      <div class="hamburger">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </nav>
+  </header>
+
+  <section id="home" class="hero">
+    <div class="hero-content">
+      <h1>Smart Water. Better Harvests.</h1>
+      <p>An IoT-powered irrigation system designed for Kenya's small-scale farmers</p>
+      <a href="#features" class="btn">See How It Works</a>
+    </div>
+  </section>
+
+  <section id="about" class="section" style="background: var(--light-bg);">
+    <div class="container">
+      <h2 class="section-title">About AquaSense</h2>
+      <div class="grid-2 gap-8">
+        <div>
+          <p>AquaSense is a Kenyan smart irrigation platform that combines soil sensors, real-time data, and automated water control to help smallholder farmers save water, improve yields, and reduce labor.</p>
+          <p>Designed for rural deployment, it delivers both a mobile dashboard and SMS alerts so farmers can monitor crops with or without a smartphone.</p>
+          <a href="about.html" class="btn">Learn More</a>
+        </div>
+        <div>
+          <img src="https://via.placeholder.com/600x400/4CAF50/ffffff?text=AquaSense+Field" alt="AquaSense Field" class="img-full">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="stats" class="section stats-section">
+    <div class="stats-grid">
+      <div>
+        <span class="stat-number" data-target="40">0</span>
+        <p>% Water Saved</p>
+      </div>
+      <div>
+        <span class="stat-number" data-target="3">0</span>
+        <p>Sensor Types</p>
+      </div>
+      <div>
+        <span class="stat-number" data-target="24">0</span>
+        <p>Hour Monitoring</p>
+      </div>
+      <div>
+        <span class="stat-number" data-target="99">0</span>
+        <p>% Uptime</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="problem" class="section">
+    <h2 class="section-title">The Water Crisis in Kenyan Agriculture</h2>
+    <p class="lead text-center max-w-4xl mx-auto mb-8">Kenyan farmers lose 40% of water through inefficient manual irrigation. AquaSense changes that.</p>
+    
+    <div class="grid-2 gap-8">
+      <div class="feature-card">
+        <i class="fas fa-faucet-drip feature-icon"></i>
+        <h3>Water Waste</h3>
+        <p>Manual timing leads to over-watering (60%) or under-watering (40%). Crops suffer, costs rise.</p>
+      </div>
+      <div class="feature-card">
+        <i class="fas fa-thermometer-half feature-icon"></i>
+        <h3>Blind Scheduling</h3>
+        <p>Farmers guess based on experience. No real-time soil data = poor decisions.</p>
+      </div>
+    </div>
+
+    <div class="comparison-table">
+      <table>
+        <thead>
+          <tr>
+            <th></th>
+            <th>Traditional</th>
+            <th>AquaSense</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Water Efficiency</td>
+            <td class="traditional">40% wasted</td>
+            <td class="majiq">95% efficient</td>
+          </tr>
+          <tr>
+            <td>Data</td>
+            <td class="traditional">Manual guess</td>
+            <td class="majiq">Real-time sensors</td>
+          </tr>
+          <tr>
+            <td>Control</td>
+            <td class="traditional">Manual labor</td>
+            <td class="majiq">Auto trigger</td>
+          </tr>
+          <tr>
+            <td>Monitoring</td>
+            <td class="traditional">Daily visits</td>
+            <td class="majiq">SMS + Dashboard</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="features" class="section" style="background: var(--light-bg);">
+    <h2 class="section-title">Key Features</h2>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <i class="fas fa-tint feature-icon"></i>
+        <h3>Soil Moisture Monitoring</h3>
+        <p>Capacitive sensors measure real-time moisture levels. Alerts when critical thresholds reached.</p>
+      </div>
+      <div class="feature-card">
+        <i class="fas fa-magic feature-icon"></i>
+        <h3>Auto Irrigation</h3>
+        <p>ESP32 microcontroller triggers water valve automatically based on sensor data and weather.</p>
+      </div>
+      <div class="feature-card">
+        <i class="fas fa-chart-line feature-icon"></i>
+        <h3>Web Dashboard</h3>
+        <p>Live graphs, historical data, irrigation logs. Mobile-responsive ASP.NET dashboard.</p>
+      </div>
+      <div class="feature-card">
+        <i class="fas fa-sms feature-icon"></i>
+        <h3>SMS Alerts</h3>
+        <p>Simple SMS for basic phones: "Irrigation ON", low moisture warnings, system status.</p>
+      </div>
+      <div class="feature-card">
+        <i class="fas fa-solar-panel feature-icon"></i>
+        <h3>Solar Powered</h3>
+        <p>Off-grid operation with solar panel. Works anywhere in rural Kenya.</p>
+      </div>
+      <div class="feature-card">
+        <i class="fas fa-database feature-icon"></i>
+        <h3>Cloud Data</h3>
+        <p>PostgreSQL stores all readings. Analyze trends, predict problems.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="demo" class="section" style="background: var(--light-bg);">
+    <div class="container text-center">
+      <h2 class="section-title">Preview the Dashboard</h2>
+      <p class="lead mx-auto max-w-4xl mb-8">Track moisture, trigger irrigation, and see real-time alerts from a smart farm dashboard.</p>
+      <img src="https://via.placeholder.com/1000x500/2196F3/ffffff?text=Dashboard+Preview" alt="Dashboard Preview" class="img-full">
+      <div style="margin-top: 2rem;">
+        <a href="demo.html" class="btn">Open Live Demo</a>
+      </div>
+    </div>
+  </section>
+
+  <a href="#home" class="btn fixed-btn">Back to Top</a>
+
+  <footer>
+    <div class="footer-links">
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="problem.html">Problem</a>
+      <a href="features.html">Features</a>
+      <a href="how.html">How It Works</a>
+      <a href="tech.html">Tech</a>
+      <a href="research.html">Research</a>
+      <a href="demo.html">Demo</a>
+      <a href="contact.html">Contact</a>
+      <a href="login.html">Login</a>
+      <a href="register.html">Register</a>
+    </div>
+    <p>&copy; 2026 Lewis Ondigi Abuga | The Cooperative University of Kenya | Department of Information Technology</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

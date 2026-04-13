@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>How It Works - AquaSense</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="index.html" class="logo">
+        <i class="fas fa-seedling"></i> AquaSense
+      </a>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="problem.html">Problem</a></li>
+        <li><a href="features.html">Features</a></li>
+        <li><a href="how.html" class="active">How It Works</a></li>
+        <li><a href="tech.html">Tech</a></li>
+        <li><a href="research.html">Research</a></li>
+        <li><a href="demo.html">Demo</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li><a href="login.html">Login</a></li>
+        <li><a href="register.html">Register</a></li>
+      </ul>
+      <div class="auth-nav">
+        <a href="login.html" class="login-icon" title="Sign In">
+          <i class="fas fa-user-circle"></i>
+        </a>
+      </div>
+      <div class="hamburger">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </nav>
+  </header>
+
+  <section class="hero hero-small">
+    <div class="container">
+      <h1>Intelligent Workflow</h1>
+      <p>From soil to SMS - complete automation pipeline</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2 class="section-title">System Flow</h2>
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content left">
+          <i class="fas fa-tint"></i>
+          <h3>1. Data Collection</h3>
+          <p>Soil moisture, temperature, humidity sensors sample every <strong>15 minutes</strong>. Multi-depth readings for accuracy.</p>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content right">
+          <i class="fas fa-microchip"></i>
+          <h3>2. Smart Processing</h3>
+          <p>ESP32 microcontroller analyzes data against <strong>crop thresholds</strong>, weather forecasts, and historical patterns.</p>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content left">
+          <i class="fas fa-play-circle"></i>
+          <h3>3. Auto Trigger</h3>
+          <p>Solenoid valve opens for <strong>precise duration</strong>. Flow rate monitored, pump protected from dry run.</p>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content right">
+          <i class="fas fa-sms"></i>
+          <h3>4. Farmer Alert</h3>
+          <p>SMS confirmation + dashboard update. <strong>No smartphone needed</strong> for basic monitoring.</p>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content left">
+          <i class="fas fa-database"></i>
+          <h3>5. Cloud Storage</h3>
+          <p>All events logged to PostgreSQL. Trends analyzed for <strong>predictive optimization</strong>.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="background: var(--light-bg);">
+    <h2 class="section-title">Crop Profiles</h2>
+    <div class="grid-3 gap-8">
+      <div class="profile-card">
+        <h3>Maize</h3>
+        <p>Moisture: 25-35% | Cycle: 90 days</p>
+      </div>
+      <div class="profile-card">
+        <h3>Tomato</h3>
+        <p>Moisture: 30-45% | Cycle: 60 days</p>
+      </div>
+      <div class="profile-card">
+        <h3>Beans</h3>
+        <p>Moisture: 20-30% | Cycle: 75 days</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="flow-diagram">
+      <div class="flow-node sensor">
+        Sensors
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-node esp32">
+        ESP32 Brain
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-node valve">
+        Valve
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-node cloud">
+        Cloud
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-node phone">
+        Farmer Phone
+      </div>
+    </div>
+  </section>
+
+  <a href="demo.html" class="btn fixed-btn">See Live Demo</a>
+
+  <footer>
+    <div class="footer-links">
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="problem.html">Problem</a>
+      <a href="features.html">Features</a>
+      <a href="how.html">How It Works</a>
+      <a href="tech.html">Tech</a>
+      <a href="research.html">Research</a>
+      <a href="demo.html">Demo</a>
+      <a href="contact.html">Contact</a>
+      <a href="login.html">Login</a>
+      <a href="register.html">Register</a>
+    </div>
+    <p>&copy; 2026 Lewis Ondigi Abuga | The Cooperative University of Kenya</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
