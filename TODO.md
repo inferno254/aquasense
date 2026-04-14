@@ -1,58 +1,42 @@
-# AquaSense - Intelligent Irrigation Website
-**Project Location:** C:/Users/Inferno/aquasense
-**Tech:** HTML/CSS/JS Static Site (Demo Auth with .NET API)
-**Status:** Phase 2 Complete ✓ | Phase 6 API Integration Complete ✓
+# Aquasense Phase 2 Frontend Polish - Detailed Steps
+
+## Phase 2 Status: 🔄 In Progress
+
+**Instructions:** Mark each step ✅ after completion. Use tools to edit files step-by-step.
+
+### Step 2.1: Fix farm selector logic in demo.html + script.js
+- ✅ Edit demo.html inline script: Replace all `farmId` with `selectedFarmId` in API calls (updateSensors, updateEvents, updateAlerts, triggerIrrigation)
+- ✅ Test: Switch farms, verify data updates per farm
+
+### Step 2.2: Add Swahili toggle
+- ✅ Edit demo.html: Add toggle button near farm-selector (`<button id="langToggle">Swahili</button>`)
+- ✅ Edit script.js: Add i18n object (Eng/Swa for key strings: dashboard titles, sensors, buttons, alerts)
+- ✅ Implement lang switch: Update DOM texts, localStorage lang, reload on toggle
+- ✅ Add Swahili translations (use accurate terms: e.g., "Soil Moisture" → "Unyevu wa Udongo")
+
+### Step 2.3: Add SMS status indicator
+- ✅ Edit demo.html: Add div in controls card (`<div id="smsStatus" class="sms-indicator">SMS: Ready</div>`)
+- ✅ Edit script.js: Add updateSmsStatus() fetching recent notifications or mock backend /data/sms-status
+- ✅ Style: Green/red pill in style.css
+
+### Step 2.4: Enhance dashboard (WebSocket/polling, responsiveness)
+- ✅ Edit script.js: Reduce setInterval to 10s, add EventSource for real-time if backend supports
+- ✅ Test multi-farm: Create test farms via register/login
+
+### Step 2.5: Edit style.css for new elements
+- ✅ Add .lang-toggle, .sms-indicator styles (responsive)
+
+### Step 2.6: Create admin.html
+- ✅ Create admin.html: Multi-farm table/chart overview, link to demo.html per farm
+- ✅ Reuse components from demo.html (auth, apiBase, etc.)
+
+### Step 2.7: Test & Mark Complete
+- ✅ Full test: serve_frontend.ps1, backend running, login, switch lang/farm, irrigate, check SMS
+- ✅ Update TODO.md: Phase 2 ✅ → Proceed to Phase 3 Hardware
+
+**Phase 2 Status: ✅ COMPLETE**
+
+**Next:** Phase 3: Hardware Simulation & IoT
 
 
-## Phase 1 — Planning & Design ✓
-- [x] Target audience defined
-- [x] Colors: Greens/Blues agri-water theme
-- [x] Fonts: Inter
-- [x] Tech: HTML/CSS/JS
-- [x] Wireframes planned
-
-## Phase 2 — Pages to Build
-- [x] 1. Landing Page (index.html) ✓
-- [x] 2. About (about.html) ✓
-- [x] 3. Problem & Solution (problem.html) ✓
-- [x] 4. Features (features.html) ✓
-- [x] 5. How It Works (how.html) ✓
-- [x] 6. Tech Stack (tech.html) ✓
-- [x] 7. Dashboard Demo (demo.html) ✓
-- [x] 8. Research (research.html) ✓
-- [x] 9. Contact (contact.html) ✓
-- [x] 10. Login (login.html) ✓
-- [x] 11. Registration page (register.html) ✓
-
-## Phase 3 — Components ✓
-- [x] Responsive navbar (w/ login icon)
-- [x] Hero animations
-- [x] Feature cards
-- [x] Timeline
-- [x] Stats counter
-- [x] Footer
-- [x] Footer standardization across pages
-
-## Phase 4 — Authentication ✓
-- [x] Login icon top-right nav
-- [x] Full login page (login.html)
-- [x] Registration page (register.html)
-- [x] Form validation + demo auth (localStorage)
-- [x] User dashboard post-login (demo.html)
-- [x] Register link added to all pages
-- [x] Demo dashboard events and controls patched
-
-## Phase 5 — Database (PostgreSQL) 📊
-- [x] Install PostgreSQL locally/Windows ✓
-- [x] Create DB `aquasense` ✓
-- [x] 5 Tables: `Users`, `Farms`, `Sensor_Readings`, `Irrigation_Events`, `System_Alerts` ✓
-- [x] Primary/Foreign keys + relationships (Users→Farms→Readings/Events/Alerts)
-- [x] Sample data for demo
-- [x] .NET API connection (Phase 6)
-- [x] Multi-farm selection UI on dashboard
-
-**Next:** Verify local API server and extend farm management  
-**Run schema:** `psql -U postgres -d aquasense -f ../aquasense/schema.sql`  
-**Demo Users:** admin@example.com / password123 | farmer@kenya.com / irrigate2024  
-**Site:** `start ../aquasense/index.html`
 

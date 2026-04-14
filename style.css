@@ -854,6 +854,78 @@ nav {
   color: var(--text-dark);
 }
 
+.lang-toggle {
+  padding: 0.75rem 1rem;
+  background: linear-gradient(135deg, #FF9800, #F57C00);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.3s ease;
+  min-width: 120px;
+  justify-content: center;
+}
+
+.lang-toggle:hover {
+  background: linear-gradient(135deg, #FFB74D, #FF9800);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 152, 0, 0.4);
+}
+
+@media (max-width: 768px) {
+  .farm-selector {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .lang-toggle {
+    margin-top: 0.5rem;
+    min-width: auto;
+  }
+}
+
+.sms-indicator {
+  margin-top: 1rem;
+  padding: 0.75rem 1rem;
+  border-radius: 25px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.3s ease;
+}
+
+.sms-indicator.ready {
+  background: rgba(76, 175, 80, 0.15);
+  color: #2E7D32;
+  border: 1px solid rgba(76, 175, 80, 0.3);
+}
+
+.sms-indicator.pending {
+  background: rgba(255, 152, 0, 0.15);
+  color: #F57C00;
+  border: 1px solid rgba(255, 152, 0, 0.3);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+@media (max-width: 768px) {
+  .sms-indicator {
+    justify-content: center;
+  }
+}
+
+
 
 .system-alerts {
   background: rgba(255, 243, 224, 0.95);

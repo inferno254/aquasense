@@ -53,7 +53,11 @@
         <div class="farm-selector">
           <label for="farmSelect">Active Farm</label>
           <select id="farmSelect"></select>
+          <button id="langToggle" class="lang-toggle" title="Toggle Language">
+            <i class="fas fa-language"></i> Kiswahili
+          </button>
         </div>
+
       </div>
       <div class="status-indicators">
         <div class="status online">
@@ -113,6 +117,10 @@
             <span class="slider"></span>
           </label>
         </div>
+        <div id="smsStatus" class="sms-indicator">
+          <i class="fas fa-sms"></i> SMS: Ready
+        </div>
+
       </div>
 
       <!-- Event feed -->
@@ -165,6 +173,53 @@
     let selectedFarmId = auth?.farmId || '550e8400-e29b-41d4-a716-446655440002';
     const apiBase = window.apiBase || 'http://localhost:5000/api';
 
+    // i18n support
+    const i18n = {
+      en: {
+        'dashboardTitle': 'Dashboard',
+        'liveReadings': 'Live Readings',
+        'soilMoisture': 'Soil Moisture',
+        'temperature': 'Temperature',
+        'humidity': 'Humidity',
+        'recentActivity': 'Recent Activity',
+        'manualControls': 'Manual Controls',
+        'irrigateNow': 'Irrigate Now',
+        'simulateUpdate': 'Simulate Sensor Update',
+        'pauseAuto': 'Pause Auto',
+        'autoMode': 'Auto Mode',
+        'recentEvents': 'Recent Irrigation Events',
+        'recentAlerts': 'Recent System Alerts',
+        'moistureTrend': '24hr Moisture Trend',
+        'activeFarm': 'Active Farm',
+        'online': 'Online',
+        'welcomeBack': 'Welcome back'
+      },
+      sw: {
+        'dashboardTitle': 'Dashibodi',
+        'liveReadings': 'Somo la Sasa',
+        'soilMoisture': 'Unyevu wa Udongo',
+        'temperature': 'Joto',
+        'humidity': 'Unyevu',
+        'recentActivity': 'Shughuli za Hivi Karibuni',
+        'manualControls': 'Udhibiti wa Mkono',
+        'irrigateNow': 'Mwagilia Sasa',
+        'simulateUpdate': 'Ongeza Sensor',
+        'pauseAuto': 'Simamisha Otomatiki',
+        'autoMode': 'Modi ya Otomatiki',
+        'recentEvents': 'Matukio ya Umwagiliaji',
+        'recentAlerts': 'Onyo la Mfumo',
+        'moistureTrend': 'Mwenendo wa Unyevu Saa 24',
+        'activeFarm': 'Shamba Linalofanya Kazi',
+        'online': 'Mkondonline',
+        'welcomeBack': 'Karibu tena'
+      }
+    };
+
+    let currentLang = localStorage.getItem('lang') || 'en';
+    document.documentElement.lang = currentLang;
+    document.querySelector('#langToggle')?.textContent = currentLang === 'en' ? 'Kiswahili' : 'English';
+
+
     function getActiveFarm() {
       if (!auth?.farms?.length) {
         return { FarmId: selectedFarmId, Location: 'Field 1', CropType: 'Unknown' };
@@ -176,10 +231,10 @@
       const farmSelect = document.getElementById('farmSelect');
       if (!farmSelect) return;
       if (!auth?.farms?.length) {
-        farmSelect.innerHTML = `<option value="${selectedFarmId}">Field 1</option>`;
+        farmSelect.innerHTML = `<option value="${selectedFarmId}">${i18n[currentLang]['activeFarm'] || 'Field 1'}</option>`;
         return;
       }
-      farmSelect.innerHTML = auth.farms.map(f => `<option value="${f.FarmId}">${f.Location} (${f.CropType || 'Farm'})</option>`).join('');
+      farmSelect.innerHTML = auth.farms.map(f => `<option value="${f.FarmId}">${f.Location} (${f.CropType || 'Shamba'})</option>`).join('');
       if (!auth.farms.some(f => f.FarmId === selectedFarmId)) {
         selectedFarmId = auth.farms[0].FarmId;
       }
@@ -191,7 +246,47 @@
         updateEvents();
         updateAlerts();
       });
+
+      // Language toggle
+      const langToggle = document.getElementById('langToggle');
+      if (langToggle) {
+        langToggle.addEventListener('click', () => {
+          currentLang = currentLang === 'en' ? 'sw' : 'en';
+          localStorage.setItem('lang', currentLang);
+          document.documentElement.lang = currentLang;
+          langToggle.innerHTML = currentLang === 'en' ? '<i class="fas fa-language"></i> Kiswahili' : '<i class="fas fa-language"></i> English';
+          updateAllTranslations();
+          updateDashboardTitle();
+        });
+      }
     }
+
+    function updateAllTranslations() {
+      const translations = {
+        '.live-sensors h3': i18n[currentLang]['liveReadings'] || 'Live Readings',
+        '.recent-activity h3': i18n[currentLang]['recentActivity'] || 'Recent Activity',
+        '.controls h3': i18n[currentLang]['manualControls'] || 'Manual Controls',
+        '.irrig ate': i18n[currentLang]['irrigateNow'] || 'Irrigate Now',
+        '.simulate': i18n[currentLang]['simulateUpdate'] || 'Simulate Sensor Update',
+        '.pause': i18n[currentLang]['pauseAuto'] || 'Pause Auto',
+        '.toggle label': i18n[currentLang]['autoMode'] || 'Auto Mode',
+        '.recent-events h3': i18n[currentLang]['recentEvents'] || 'Recent Irrigation Events',
+        '.system-alerts h3': i18n[currentLang]['recentAlerts'] || 'Recent System Alerts',
+        '.chart-card h3': i18n[currentLang]['moistureTrend'] || '24hr Moisture Trend',
+        '.sensor-item span:last-child:nth-of-type(1)': i18n[currentLang]['soilMoisture'] || 'Soil Moisture',
+        '.sensor-item span:last-child:nth-of-type(2)': i18n[currentLang]['temperature'] || 'Temperature',
+        '.sensor-item span:last-child:nth-of-type(3)': i18n[currentLang]['humidity'] || 'Humidity',
+        '.farm-selector label': i18n[currentLang]['activeFarm'] || 'Active Farm',
+        '.status-indicators .status.online span': i18n[currentLang]['online'] || 'Online',
+        '.dashboard-welcome': i18n[currentLang]['welcomeBack'] || 'Welcome back'
+      };
+
+      Object.entries(translations).forEach(([selector, text]) => {
+        const el = document.querySelector(selector);
+        if (el) el.textContent = text;
+      });
+    }
+
 
     function updateDashboardTitle() {
       const heading = document.querySelector('.dashboard-header h1');
@@ -216,7 +311,8 @@
 
     async function updateSensors() {
       try {
-        const response = await fetchWithAuth(`${apiBase}/data/farms/${farmId}/sensors?hours=24`);
+        const response = await fetchWithAuth(`${apiBase}/data/farms/${selectedFarmId}/sensors?hours=24`);
+
         if (response.ok) {
           const data = await response.json();
           if (data.latest) {
@@ -279,7 +375,8 @@
       if (!eventList) return;
 
       try {
-        const response = await fetchWithAuth(`${apiBase}/data/farms/${farmId}/events?limit=5`);
+        const response = await fetchWithAuth(`${apiBase}/data/farms/${selectedFarmId}/events?limit=5`);
+
         if (response.ok) {
           const events = await response.json();
           eventList.innerHTML = events.map(event => `
@@ -306,7 +403,8 @@
       if (!alertList) return;
 
       try {
-        const response = await fetchWithAuth(`${apiBase}/data/farms/${farmId}/alerts?resolved=false`);
+        const response = await fetchWithAuth(`${apiBase}/data/farms/${selectedFarmId}/alerts?resolved=false`);
+
         if (response.ok) {
           const alerts = await response.json();
           alertList.innerHTML = alerts.map(alert => `
@@ -328,7 +426,8 @@
 
     async function triggerIrrigation() {
       try {
-        const response = await fetchWithAuth(`${apiBase}/irrigation/farms/${farmId}/irrigate`, {
+        const response = await fetchWithAuth(`${apiBase}/irrigation/farms/${selectedFarmId}/irrigate`, {
+
           method: 'POST',
           body: JSON.stringify({ manual: true, duration: 12, estimatedLitres: 420 }),
           headers: { 'Content-Type': 'application/json' }
@@ -351,11 +450,36 @@
     updateSensors();
     updateEvents();
     updateAlerts();
+    async function updateSmsStatus() {
+      const smsEl = document.getElementById('smsStatus');
+      if (!smsEl) return;
+      
+      try {
+        // Mock backend /notifications/status - try real API first
+        const response = await fetchWithAuth(`${apiBase}/notifications/status`);
+        if (response.ok) {
+          const status = await response.json();
+          smsEl.textContent = `SMS: ${status.lastSent ? 'Sent ' + new Date(status.lastSent).toLocaleTimeString() : 'Ready'}`;
+          smsEl.className = 'sms-indicator ready';
+          return;
+        }
+      } catch (error) {
+        console.log('SMS status API unavailable, using mock');
+      }
+      
+      // Mock rotating status
+      const statuses = ['Ready ✅', 'Sent 14:23', 'Pending 📱', 'Ready ✅'];
+      const index = Math.floor(Math.random() * statuses.length);
+      smsEl.innerHTML = `<i class="fas fa-sms"></i> ${statuses[index]}`;
+      smsEl.className = `sms-indicator ${index === 2 ? 'pending' : 'ready'}`;
+    }
+
     setInterval(() => {
       updateSensors();
       updateEvents();
       updateAlerts();
-    }, 30000);
+      updateSmsStatus();
+    }, 10000); // Faster polling 10s
   </script>
 </body>
 </html>

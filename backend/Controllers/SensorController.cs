@@ -22,6 +22,49 @@ public class SensorController : ControllerBase
         _irrigationService = irrigationService;
     }
 
+    // Hardware webhook - ESP32 anonymous POST
+    [AllowAnonymous]
+    [HttpPost("hardware/{farmId}/reading")]
+    public async Task<ActionResult> HardwareSensorReading(Guid farmId, [FromBody] SensorReadingDto request)
+    {
+        if (!ModelState.IsValid || !request.SoilMoisture.HasValue)
+        {
+            return BadRequest("Valid soil moisture required");
+        }
+
+        try 
+        {
+            var reading = new SensorReading
+            {
+                ReadingId = Guid.NewGuid(),
+                FarmId = farmId,
+                SoilMoisture = request.SoilMoisture.Value,
+                Temperature = request.Temperature,
+                Humidity = request.Humidity,
+                Timestamp = request.Timestamp ?? DateTime.UtcNow
+            };
+
+            _context.SensorReadings.Add(reading);
+            await _context.SaveChangesAsync();
+
+            // Trigger irrigation logic/SMS if low
+            await _irrigationService.ProcessSensorReadingAsync(farmId, reading);
+
+            // Response for ESP32 firmware (match existing "alert" format)
+            var lowMoisture = request.SoilMoisture < 35;
+            return Ok(new 
+            {
+                message = "Sensor reading recorded",
+                readingId = reading.ReadingId,
+                alert = lowMoisture
+            });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new { error = ex.Message });
+        }
+    }
+
     [HttpPost("farms/{farmId}/sensor-readings")]
     public async Task<ActionResult> AddSensorReading(Guid farmId, [FromBody] SensorReadingDto request)
     {
