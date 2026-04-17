@@ -15,19 +15,18 @@
         <i class="fas fa-seedling"></i> AquaSense
       </a>
       <ul class="nav-links">
-        <li><a href="index.html" class="active">Home</a></li>
-        <li><a href="about.html">About</a></li>
-        <li><a href="problem.html">Problem</a></li>
-        <li><a href="features.html">Features</a></li>
-        <li><a href="how.html">How It Works</a></li>
-        <li><a href="tech.html">Tech</a></li>
-        <li><a href="research.html">Research</a></li>
-        <li><a href="demo.html">Demo</a></li>
-        <li><a href="contact.html">Contact</a></li>
-        <li><a href="login.html">Login</a></li>
-        <li><a href="register.html">Register</a></li>
+        <li><a href="index.html" class="active" data-lang="nav.home">Home</a></li>
+        <li><a href="features.html" data-lang="nav.features">Features</a></li>
+        <li><a href="how.html" data-lang="nav.how">How It Works</a></li>
+        <li><a href="dashboard.html" data-lang="nav.dashboard">Dashboard</a></li>
+        <li><a href="login.html" data-lang="nav.login">Login</a></li>
+        <li><a href="register.html" data-lang="nav.register">Register</a></li>
       </ul>
       <div class="auth-nav">
+        <button class="lang-toggle" id="langToggle" onclick="toggleLanguage()">
+          <i class="fas fa-globe"></i>
+          <span id="langText">EN</span>
+        </button>
         <a href="login.html" class="login-icon" title="Sign In">
           <i class="fas fa-user-circle"></i>
         </a>
@@ -42,20 +41,20 @@
 
   <section id="home" class="hero">
     <div class="hero-content">
-      <h1>Smart Water. Better Harvests.</h1>
-      <p>An IoT-powered irrigation system designed for Kenya's small-scale farmers</p>
-      <a href="#features" class="btn">See How It Works</a>
+      <h1 data-lang="hero.title">Smart Water. Better Harvests.</h1>
+      <p data-lang="hero.subtitle">An IoT-powered irrigation system designed for Kenya's small-scale farmers</p>
+      <a href="#features" class="btn" data-lang="hero.cta">See How It Works</a>
     </div>
   </section>
 
   <section id="about" class="section" style="background: var(--light-bg);">
     <div class="container">
-      <h2 class="section-title">About AquaSense</h2>
+      <h2 class="section-title" data-lang="about.title">About AquaSense</h2>
       <div class="grid-2 gap-8">
         <div>
-          <p>AquaSense is a Kenyan smart irrigation platform that combines soil sensors, real-time data, and automated water control to help smallholder farmers save water, improve yields, and reduce labor.</p>
-          <p>Designed for rural deployment, it delivers both a mobile dashboard and SMS alerts so farmers can monitor crops with or without a smartphone.</p>
-          <a href="about.html" class="btn">Learn More</a>
+          <p data-lang="about.desc1">AquaSense is a Kenyan smart irrigation platform that combines soil sensors, real-time data, and automated water control to help smallholder farmers save water, improve yields, and reduce labor.</p>
+          <p data-lang="about.desc2">Designed for rural deployment, it delivers both a mobile dashboard and SMS alerts so farmers can monitor crops with or without a smartphone.</p>
+          <a href="about.html" class="btn" data-lang="about.learnmore">Learn More</a>
         </div>
         <div>
           <img src="https://via.placeholder.com/600x400/4CAF50/ffffff?text=AquaSense+Field" alt="AquaSense Field" class="img-full">
@@ -66,42 +65,39 @@
 
   <section id="objectives" class="section">
     <div class="container">
-      <h2 class="section-title">Project Objectives</h2>
+      <h2 class="section-title" data-lang="objectives.title">Project Objectives</h2>
       <div class="grid-2 gap-8">
         <div class="feature-card">
-          <h3>1. Sensor Network Deployment</h3>
-          <p>Deploy soil moisture, temperature, and humidity sensors across the farm to capture field conditions in real time.</p>
+          <h3 data-lang="obj1.title">1. Sensor Network Deployment</h3>
+          <p data-lang="obj1.desc">Deploy soil moisture, temperature, and humidity sensors across the farm to capture field conditions in real time.</p>
         </div>
         <div class="feature-card">
-          <h3>2. Microcontroller Control System</h3>
-          <p>Use a central ESP32-based controller to collect sensor data and operate irrigation valves automatically.</p>
+          <h3 data-lang="obj2.title">2. Microcontroller Control System</h3>
+          <p data-lang="obj2.desc">Use a central ESP32-based controller to collect sensor data and operate irrigation valves automatically.</p>
         </div>
         <div class="feature-card">
-          <h3>3. Web Dashboard Monitoring</h3>
-          <p>Provide farmers with a responsive web dashboard for live soil condition updates, irrigation activity, and system status.</p>
+          <h3 data-lang="obj3.title">3. Web Dashboard Monitoring</h3>
+          <p data-lang="obj3.desc">Provide farmers with a responsive web dashboard for live soil condition updates, irrigation activity, and system status.</p>
         </div>
         <div class="feature-card">
-          <h3>4. Threshold-Based Irrigation</h3>
-          <p>Trigger irrigation automatically whenever soil moisture drops below configured thresholds to protect crop health.</p>
+          <h3 data-lang="obj4.title">4. Threshold-Based Irrigation</h3>
+          <p data-lang="obj4.desc">Trigger irrigation automatically whenever soil moisture drops below configured thresholds to protect crop health.</p>
         </div>
         <div class="feature-card">
-          <h3>5. SMS Alerts and Status Updates</h3>
-          <p>Send system alerts and basic status updates by SMS so farmers can stay informed even without a smartphone.</p>
+          <h3 data-lang="obj5.title">5. SMS Alerts and Status Updates</h3>
+          <p data-lang="obj5.desc">Send system alerts and basic status updates by SMS so farmers can stay informed even without a smartphone.</p>
         </div>
       </div>
     </div>
   </section>
 
-  <section class="section" style="background: rgba(255, 255, 255, 0.95);">
+  <section class="section" style="background: linear-gradient(135deg, rgba(76, 175, 80, 0.1), rgba(33, 150, 243, 0.1));">
     <div class="container">
-      <h2 class="section-title">Objective Controls</h2>
-      <p class="lead text-center max-w-4xl mx-auto mb-8">These action buttons visually represent the system goals: deploying sensors, controlling irrigation, monitoring the dashboard, automating triggers, and delivering SMS alerts.</p>
-      <div class="objective-actions">
-        <a href="features.html" class="btn">Deploy Sensors</a>
-        <a href="demo.html" class="btn btn-secondary">Open Dashboard</a>
-        <a href="how.html" class="btn">Auto Irrigation</a>
-        <a href="contact.html" class="btn btn-secondary">SMS Alerts</a>
-        <a href="about.html" class="btn">System Status</a>
+      <h2 class="section-title" data-lang="objective.title">Get Started</h2>
+      <p class="lead text-center max-w-4xl mx-auto mb-4" data-lang="objective.subtitle">Sign in or sign up to access your smart irrigation dashboard</p>
+      <div class="objective-actions" style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
+        <a href="login.html" class="btn" data-lang="nav.login">Sign In</a>
+        <a href="register.html" class="btn btn-secondary" data-lang="nav.register">Sign Up</a>
       </div>
     </div>
   </section>
@@ -110,37 +106,37 @@
     <div class="stats-grid">
       <div>
         <span class="stat-number" data-target="40">0</span>
-        <p>% Water Saved</p>
+        <p data-lang="stats.water">% Water Saved</p>
       </div>
       <div>
         <span class="stat-number" data-target="3">0</span>
-        <p>Sensor Types</p>
+        <p data-lang="stats.sensors">Sensor Types</p>
       </div>
       <div>
         <span class="stat-number" data-target="24">0</span>
-        <p>Hour Monitoring</p>
+        <p data-lang="stats.monitoring">Hour Monitoring</p>
       </div>
       <div>
         <span class="stat-number" data-target="99">0</span>
-        <p>% Uptime</p>
+        <p data-lang="stats.uptime">% Uptime</p>
       </div>
     </div>
   </section>
 
   <section id="problem" class="section">
-    <h2 class="section-title">The Water Crisis in Kenyan Agriculture</h2>
-    <p class="lead text-center max-w-4xl mx-auto mb-8">Kenyan farmers lose 40% of water through inefficient manual irrigation. AquaSense changes that.</p>
+    <h2 class="section-title" data-lang="problem.title">The Water Crisis in Kenyan Agriculture</h2>
+    <p class="lead text-center max-w-4xl mx-auto mb-8" data-lang="problem.subtitle">Kenyan farmers lose 40% of water through inefficient manual irrigation. AquaSense changes that.</p>
     
     <div class="grid-2 gap-8">
       <div class="feature-card">
         <i class="fas fa-faucet-drip feature-icon"></i>
-        <h3>Water Waste</h3>
-        <p>Manual timing leads to over-watering (60%) or under-watering (40%). Crops suffer, costs rise.</p>
+        <h3 data-lang="waterwaste.title">Water Waste</h3>
+        <p data-lang="waterwaste.desc">Manual timing leads to over-watering (60%) or under-watering (40%). Crops suffer, costs rise.</p>
       </div>
       <div class="feature-card">
         <i class="fas fa-thermometer-half feature-icon"></i>
-        <h3>Blind Scheduling</h3>
-        <p>Farmers guess based on experience. No real-time soil data = poor decisions.</p>
+        <h3 data-lang="blindsched.title">Blind Scheduling</h3>
+        <p data-lang="blindsched.desc">Farmers guess based on experience. No real-time soil data = poor decisions.</p>
       </div>
     </div>
 
@@ -149,30 +145,30 @@
         <thead>
           <tr>
             <th></th>
-            <th>Traditional</th>
-            <th>AquaSense</th>
+            <th data-lang="table.traditional">Traditional</th>
+            <th data-lang="table.aquasense">AquaSense</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td>Water Efficiency</td>
-            <td class="traditional">40% wasted</td>
-            <td class="majiq">95% efficient</td>
+            <td data-lang="table.water">Water Efficiency</td>
+            <td class="traditional" data-lang="table.waste">40% wasted</td>
+            <td class="majiq" data-lang="table.efficient">95% efficient</td>
           </tr>
           <tr>
-            <td>Data</td>
-            <td class="traditional">Manual guess</td>
-            <td class="majiq">Real-time sensors</td>
+            <td data-lang="table.data">Data</td>
+            <td class="traditional" data-lang="table.guess">Manual guess</td>
+            <td class="majiq" data-lang="table.sensors">Real-time sensors</td>
           </tr>
           <tr>
-            <td>Control</td>
-            <td class="traditional">Manual labor</td>
-            <td class="majiq">Auto trigger</td>
+            <td data-lang="table.control">Control</td>
+            <td class="traditional" data-lang="table.manual">Manual labor</td>
+            <td class="majiq" data-lang="table.autotrigger">Auto trigger</td>
           </tr>
           <tr>
-            <td>Monitoring</td>
-            <td class="traditional">Daily visits</td>
-            <td class="majiq">SMS + Dashboard</td>
+            <td data-lang="table.monitoring">Monitoring</td>
+            <td class="traditional" data-lang="table.daily">Daily visits</td>
+            <td class="majiq" data-lang="table.smsdash">SMS + Dashboard</td>
           </tr>
         </tbody>
       </table>
@@ -180,69 +176,69 @@
   </section>
 
   <section id="features" class="section" style="background: var(--light-bg);">
-    <h2 class="section-title">Key Features</h2>
+    <h2 class="section-title" data-lang="features.key">Key Features</h2>
     <div class="feature-grid">
       <div class="feature-card">
         <i class="fas fa-tint feature-icon"></i>
-        <h3>Soil Moisture Monitoring</h3>
-        <p>Capacitive sensors measure real-time moisture levels. Alerts when critical thresholds reached.</p>
+        <h3 data-lang="features.moisture">Soil Moisture Monitoring</h3>
+        <p data-lang="features.moisture.desc">Capacitive sensors measure real-time moisture levels. Alerts when critical thresholds reached.</p>
       </div>
       <div class="feature-card">
         <i class="fas fa-magic feature-icon"></i>
-        <h3>Auto Irrigation</h3>
-        <p>ESP32 microcontroller triggers water valve automatically based on sensor data and weather.</p>
+        <h3 data-lang="features.auto">Auto Irrigation</h3>
+        <p data-lang="features.auto.desc">ESP32 microcontroller triggers water valve automatically based on sensor data and weather.</p>
       </div>
       <div class="feature-card">
         <i class="fas fa-chart-line feature-icon"></i>
-        <h3>Web Dashboard</h3>
-        <p>Live graphs, historical data, irrigation logs. Mobile-responsive ASP.NET dashboard.</p>
+        <h3 data-lang="features.dashboard">Web Dashboard</h3>
+        <p data-lang="features.dashboard.desc">Live graphs, historical data, irrigation logs. Mobile-responsive ASP.NET dashboard.</p>
       </div>
       <div class="feature-card">
         <i class="fas fa-sms feature-icon"></i>
-        <h3>SMS Alerts</h3>
-        <p>Simple SMS for basic phones: "Irrigation ON", low moisture warnings, system status.</p>
+        <h3 data-lang="features.sms">SMS Alerts</h3>
+        <p data-lang="features.sms.desc">Simple SMS for basic phones: "Irrigation ON", low moisture warnings, system status.</p>
       </div>
       <div class="feature-card">
         <i class="fas fa-solar-panel feature-icon"></i>
-        <h3>Solar Powered</h3>
-        <p>Off-grid operation with solar panel. Works anywhere in rural Kenya.</p>
+        <h3 data-lang="features.solar">Solar Powered</h3>
+        <p data-lang="features.solar.desc">Off-grid operation with solar panel. Works anywhere in rural Kenya.</p>
       </div>
       <div class="feature-card">
         <i class="fas fa-database feature-icon"></i>
-        <h3>Cloud Data</h3>
-        <p>PostgreSQL stores all readings. Analyze trends, predict problems.</p>
+        <h3 data-lang="features.data">Cloud Data</h3>
+        <p data-lang="features.data.desc">SQLite database stores all readings. Analyze trends, predict problems.</p>
       </div>
     </div>
   </section>
 
   <section id="demo" class="section" style="background: var(--light-bg);">
     <div class="container text-center">
-      <h2 class="section-title">Preview the Dashboard</h2>
-      <p class="lead mx-auto max-w-4xl mb-8">Track moisture, trigger irrigation, and see real-time alerts from a smart farm dashboard.</p>
+      <h2 class="section-title" data-lang="preview.title">Preview the Dashboard</h2>
+      <p class="lead mx-auto max-w-4xl mb-8" data-lang="preview.subtitle">Track moisture, trigger irrigation, and see real-time alerts from a smart farm dashboard.</p>
       <img src="https://via.placeholder.com/1000x500/2196F3/ffffff?text=Dashboard+Preview" alt="Dashboard Preview" class="img-full">
       <div style="margin-top: 2rem;">
-        <a href="demo.html" class="btn">Open Live Demo</a>
+        <a href="dashboard.html" class="btn" data-lang="preview.open">Open Dashboard</a>
       </div>
     </div>
   </section>
 
-  <a href="#home" class="btn fixed-btn">Back to Top</a>
+  <a href="#home" class="btn fixed-btn" data-lang="backtotop">Back to Top</a>
 
   <footer>
     <div class="footer-links">
-      <a href="index.html">Home</a>
+      <a href="index.html" data-lang="nav.home">Home</a>
       <a href="about.html">About</a>
       <a href="problem.html">Problem</a>
-      <a href="features.html">Features</a>
-      <a href="how.html">How It Works</a>
+      <a href="features.html" data-lang="nav.features">Features</a>
+      <a href="how.html" data-lang="nav.how">How It Works</a>
       <a href="tech.html">Tech</a>
       <a href="research.html">Research</a>
-      <a href="demo.html">Demo</a>
-      <a href="contact.html">Contact</a>
-      <a href="login.html">Login</a>
-      <a href="register.html">Register</a>
+      <a href="dashboard.html" data-lang="nav.dashboard">Demo</a>
+      <a href="contact.html" data-lang="nav.contact">Contact</a>
+      <a href="login.html" data-lang="nav.login">Login</a>
+      <a href="register.html" data-lang="nav.register">Register</a>
     </div>
-    <p>&copy; 2026 Lewis Ondigi Abuga | The Cooperative University of Kenya | Department of Information Technology</p>
+    <p data-lang="footer.copyright">&copy; 2026 Lewis Ondigi Abuga | The Cooperative University of Kenya | Department of Information Technology</p>
   </footer>
 
   <script src="script.js"></script>

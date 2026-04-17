@@ -23,7 +23,7 @@
         <li><a href="how.html">How It Works</a></li>
         <li><a href="tech.html">Tech</a></li>
         <li><a href="research.html">Research</a></li>
-        <li><a href="demo.html" class="active">Demo</a></li>
+        <li><a href="dashboard.html" class="active">Demo</a></li>
         <li><a href="contact.html">Contact</a></li>
         <li><a href="login.html">Login</a></li>
         <li><a href="register.html">Register</a></li>
@@ -57,7 +57,6 @@
             <i class="fas fa-language"></i> Kiswahili
           </button>
         </div>
-
       </div>
       <div class="status-indicators">
         <div class="status online">
@@ -65,13 +64,12 @@
           Online
         </div>
         <div class="status last-update">
-          Last: 2min ago
+          Last: --
         </div>
       </div>
     </div>
 
     <div class="dashboard-grid">
-      <!-- Live Sensors -->
       <div class="card live-sensors">
         <h3>Live Readings</h3>
         <div class="sensor-grid">
@@ -93,37 +91,47 @@
         </div>
       </div>
 
-      <!-- Recent Activity -->
       <div class="card recent-activity">
         <h3>Recent Activity</h3>
-        <ul>
-          <li><i class="fas fa-play"></i> Irrigation: 12min (Zone 1)</li>
-          <li><i class="fas fa-bell"></i> Moisture low alert</li>
-          <li><i class="fas fa-bolt"></i> Battery: 87%</li>
-          <li><i class="fas fa-sync"></i> Data synced</li>
+        <ul class="activity-list">
+          <li><i class="fas fa-sync"></i> Loading live activity...</li>
         </ul>
       </div>
 
-      <!-- Controls -->
       <div class="card controls">
         <h3>Manual Controls</h3>
-        <button class="btn control-btn irrigate" onclick="triggerIrrigation();">Irrigate Now</button>
-        <button class="btn control-btn simulate" onclick="simulateSensorReading();">Simulate Sensor Update</button>
-        <button class="btn control-btn pause" disabled>Pause Auto</button>
+
+        <div class="control-grid">
+          <button id="irrigateBtn" class="btn control-btn irrigate"><i class="fas fa-play"></i> Irrigate Now (12min)</button>
+          <button id="simulateBtn" class="btn control-btn simulate"><i class="fas fa-sync"></i> Simulate Dry</button>
+          <button id="autoModeBtn" class="btn control-btn pause"><i class="fas fa-robot"></i> Auto <span id="autoModeLabel">ON</span></button>
+          <button id="emergencyBtn" class="btn control-btn emergency" onclick="emergencyStop()"><i class="fas fa-stop"></i> Emergency Stop</button>
+        </div>
+
+
+        <div class="control-grid">
+          <label>Threshold</label>
+          <div class="threshold-input">
+            <input type="range" id="thresholdSlider" min="20" max="60" value="35" step="5">
+            <span id="thresholdValue">35%</span>
+          </div>
+        </div>
         <div class="toggle">
           <label>Auto Mode</label>
           <label class="switch">
-            <input type="checkbox" checked disabled>
+            <input id="autoModeSwitch" type="checkbox" checked>
             <span class="slider"></span>
           </label>
+        </div>
+
+        <div id="controlFeedback" class="sms-indicator ready">
+          <i class="fas fa-circle-check"></i> Controls ready
         </div>
         <div id="smsStatus" class="sms-indicator">
           <i class="fas fa-sms"></i> SMS: Ready
         </div>
-
       </div>
 
-      <!-- Event feed -->
       <div class="card recent-events">
         <h3>Recent Irrigation Events</h3>
         <ul class="event-list">
@@ -131,7 +139,6 @@
         </ul>
       </div>
 
-      <!-- Alerts feed -->
       <div class="card system-alerts">
         <h3>Recent System Alerts</h3>
         <ul class="alert-list">
@@ -139,7 +146,6 @@
         </ul>
       </div>
 
-      <!-- Charts -->
       <div class="card chart-card">
         <h3>24hr Moisture Trend</h3>
         <canvas id="moistureChart" height="200"></canvas>
@@ -167,319 +173,366 @@
   <script>
     const auth = getAuthData();
     if (!auth?.loggedIn) {
-      window.location.href = 'login.html';
+      window.location.href = "login.html";
     }
 
-    let selectedFarmId = auth?.farmId || '550e8400-e29b-41d4-a716-446655440002';
-    const apiBase = window.apiBase || 'http://localhost:5000/api';
+    let selectedFarmId = getSelectedFarmId(auth?.farmId);
+    let moistureChart;
+    let currentLang = localStorage.getItem("lang") || "en";
 
-    // i18n support
     const i18n = {
       en: {
-        'dashboardTitle': 'Dashboard',
-        'liveReadings': 'Live Readings',
-        'soilMoisture': 'Soil Moisture',
-        'temperature': 'Temperature',
-        'humidity': 'Humidity',
-        'recentActivity': 'Recent Activity',
-        'manualControls': 'Manual Controls',
-        'irrigateNow': 'Irrigate Now',
-        'simulateUpdate': 'Simulate Sensor Update',
-        'pauseAuto': 'Pause Auto',
-        'autoMode': 'Auto Mode',
-        'recentEvents': 'Recent Irrigation Events',
-        'recentAlerts': 'Recent System Alerts',
-        'moistureTrend': '24hr Moisture Trend',
-        'activeFarm': 'Active Farm',
-        'online': 'Online',
-        'welcomeBack': 'Welcome back'
+        liveReadings: "Live Readings",
+        soilMoisture: "Soil Moisture",
+        temperature: "Temperature",
+        humidity: "Humidity",
+        recentActivity: "Recent Activity",
+        manualControls: "Manual Controls",
+        irrigateNow: "Irrigate Now",
+        simulateUpdate: "Simulate Sensor Update",
+        pauseAuto: "Pause Auto",
+        resumeAuto: "Resume Auto",
+        autoMode: "Auto Mode",
+        recentEvents: "Recent Irrigation Events",
+        recentAlerts: "Recent System Alerts",
+        moistureTrend: "24hr Moisture Trend",
+        activeFarm: "Active Farm",
+        welcomeBack: "Welcome back"
       },
       sw: {
-        'dashboardTitle': 'Dashibodi',
-        'liveReadings': 'Somo la Sasa',
-        'soilMoisture': 'Unyevu wa Udongo',
-        'temperature': 'Joto',
-        'humidity': 'Unyevu',
-        'recentActivity': 'Shughuli za Hivi Karibuni',
-        'manualControls': 'Udhibiti wa Mkono',
-        'irrigateNow': 'Mwagilia Sasa',
-        'simulateUpdate': 'Ongeza Sensor',
-        'pauseAuto': 'Simamisha Otomatiki',
-        'autoMode': 'Modi ya Otomatiki',
-        'recentEvents': 'Matukio ya Umwagiliaji',
-        'recentAlerts': 'Onyo la Mfumo',
-        'moistureTrend': 'Mwenendo wa Unyevu Saa 24',
-        'activeFarm': 'Shamba Linalofanya Kazi',
-        'online': 'Mkondonline',
-        'welcomeBack': 'Karibu tena'
+        liveReadings: "Somo la Sasa",
+        soilMoisture: "Unyevu wa Udongo",
+        temperature: "Joto",
+        humidity: "Unyevu",
+        recentActivity: "Shughuli za Hivi Karibuni",
+        manualControls: "Udhibiti wa Mkono",
+        irrigateNow: "Mwagilia Sasa",
+        simulateUpdate: "Ongeza Sensor",
+        pauseAuto: "Simamisha Otomatiki",
+        resumeAuto: "Endelea Otomatiki",
+        autoMode: "Modi ya Otomatiki",
+        recentEvents: "Matukio ya Umwagiliaji",
+        recentAlerts: "Onyo la Mfumo",
+        moistureTrend: "Mwenendo wa Unyevu Saa 24",
+        activeFarm: "Shamba Linalofanya Kazi",
+        welcomeBack: "Karibu tena"
       }
     };
 
-    let currentLang = localStorage.getItem('lang') || 'en';
     document.documentElement.lang = currentLang;
-    document.querySelector('#langToggle')?.textContent = currentLang === 'en' ? 'Kiswahili' : 'English';
 
+    function setText(selector, text) {
+      const element = document.querySelector(selector);
+      if (element) {
+        element.textContent = text;
+      }
+    }
 
     function getActiveFarm() {
       if (!auth?.farms?.length) {
-        return { FarmId: selectedFarmId, Location: 'Field 1', CropType: 'Unknown' };
+        return { FarmId: selectedFarmId, Location: "Field 1", CropType: "Unknown" };
       }
-      return auth.farms.find(f => f.FarmId === selectedFarmId) || auth.farms[0];
-    }
 
-    function populateFarmSelector() {
-      const farmSelect = document.getElementById('farmSelect');
-      if (!farmSelect) return;
-      if (!auth?.farms?.length) {
-        farmSelect.innerHTML = `<option value="${selectedFarmId}">${i18n[currentLang]['activeFarm'] || 'Field 1'}</option>`;
-        return;
-      }
-      farmSelect.innerHTML = auth.farms.map(f => `<option value="${f.FarmId}">${f.Location} (${f.CropType || 'Shamba'})</option>`).join('');
-      if (!auth.farms.some(f => f.FarmId === selectedFarmId)) {
-        selectedFarmId = auth.farms[0].FarmId;
-      }
-      farmSelect.value = selectedFarmId;
-      farmSelect.addEventListener('change', (event) => {
-        selectedFarmId = event.target.value;
-        updateDashboardTitle();
-        updateSensors();
-        updateEvents();
-        updateAlerts();
-      });
-
-      // Language toggle
-      const langToggle = document.getElementById('langToggle');
-      if (langToggle) {
-        langToggle.addEventListener('click', () => {
-          currentLang = currentLang === 'en' ? 'sw' : 'en';
-          localStorage.setItem('lang', currentLang);
-          document.documentElement.lang = currentLang;
-          langToggle.innerHTML = currentLang === 'en' ? '<i class="fas fa-language"></i> Kiswahili' : '<i class="fas fa-language"></i> English';
-          updateAllTranslations();
-          updateDashboardTitle();
-        });
-      }
+      return auth.farms.find((farm) => farm.FarmId === selectedFarmId) || auth.farms[0];
     }
 
     function updateAllTranslations() {
-      const translations = {
-        '.live-sensors h3': i18n[currentLang]['liveReadings'] || 'Live Readings',
-        '.recent-activity h3': i18n[currentLang]['recentActivity'] || 'Recent Activity',
-        '.controls h3': i18n[currentLang]['manualControls'] || 'Manual Controls',
-        '.irrig ate': i18n[currentLang]['irrigateNow'] || 'Irrigate Now',
-        '.simulate': i18n[currentLang]['simulateUpdate'] || 'Simulate Sensor Update',
-        '.pause': i18n[currentLang]['pauseAuto'] || 'Pause Auto',
-        '.toggle label': i18n[currentLang]['autoMode'] || 'Auto Mode',
-        '.recent-events h3': i18n[currentLang]['recentEvents'] || 'Recent Irrigation Events',
-        '.system-alerts h3': i18n[currentLang]['recentAlerts'] || 'Recent System Alerts',
-        '.chart-card h3': i18n[currentLang]['moistureTrend'] || '24hr Moisture Trend',
-        '.sensor-item span:last-child:nth-of-type(1)': i18n[currentLang]['soilMoisture'] || 'Soil Moisture',
-        '.sensor-item span:last-child:nth-of-type(2)': i18n[currentLang]['temperature'] || 'Temperature',
-        '.sensor-item span:last-child:nth-of-type(3)': i18n[currentLang]['humidity'] || 'Humidity',
-        '.farm-selector label': i18n[currentLang]['activeFarm'] || 'Active Farm',
-        '.status-indicators .status.online span': i18n[currentLang]['online'] || 'Online',
-        '.dashboard-welcome': i18n[currentLang]['welcomeBack'] || 'Welcome back'
-      };
+      const copy = i18n[currentLang];
+      setText(".live-sensors h3", copy.liveReadings);
+      setText(".recent-activity h3", copy.recentActivity);
+      setText(".controls h3", copy.manualControls);
+      setText("#irrigateBtn", copy.irrigateNow);
+      setText("#simulateBtn", copy.simulateUpdate);
+      setText(".recent-events h3", copy.recentEvents);
+      setText(".system-alerts h3", copy.recentAlerts);
+      setText(".chart-card h3", copy.moistureTrend);
+      setText(".farm-selector label", copy.activeFarm);
 
-      Object.entries(translations).forEach(([selector, text]) => {
-        const el = document.querySelector(selector);
-        if (el) el.textContent = text;
+      const sensorLabels = document.querySelectorAll(".sensor-item span:last-child");
+      if (sensorLabels[0]) sensorLabels[0].textContent = copy.soilMoisture;
+      if (sensorLabels[1]) sensorLabels[1].textContent = copy.temperature;
+      if (sensorLabels[2]) sensorLabels[2].textContent = copy.humidity;
+
+      const toggleLabel = document.querySelector(".toggle > label");
+      if (toggleLabel) {
+        toggleLabel.textContent = copy.autoMode;
+      }
+
+      const langToggle = document.getElementById("langToggle");
+      if (langToggle) {
+        langToggle.innerHTML = currentLang === "en"
+          ? '<i class="fas fa-language"></i> Kiswahili'
+          : '<i class="fas fa-language"></i> English';
+      }
+    }
+
+    function updateDashboardTitle() {
+      const farm = getActiveFarm();
+      setText(".user-name", auth?.user?.name || auth?.user?.email || "farmer");
+      setText(".farm-location", farm.Location || "Field 1");
+      setText(".farm-crop", farm.CropType ? `Crop: ${farm.CropType}` : "Crop: Unknown");
+      setText(".dashboard-header h1", `${farm.Location || "Field 1"} Dashboard`);
+      setText(".dashboard-welcome", `${i18n[currentLang].welcomeBack}, ${auth?.user?.name || auth?.user?.email || "farmer"}`);
+    }
+
+    function persistFarmSelection() {
+      setAuthData({ ...auth, farmId: selectedFarmId });
+      const url = new URL(window.location.href);
+      url.searchParams.set("farmId", selectedFarmId);
+      window.history.replaceState({}, "", url);
+    }
+
+    function populateFarmSelector() {
+      const farmSelect = document.getElementById("farmSelect");
+      if (!farmSelect) return;
+
+      if (!auth?.farms?.length) {
+        farmSelect.innerHTML = `<option value="${selectedFarmId}">Field 1</option>`;
+        return;
+      }
+
+      farmSelect.innerHTML = auth.farms
+        .map((farm) => `<option value="${farm.FarmId}">${farm.Location} (${farm.CropType || "Farm"})</option>`)
+        .join("");
+
+      if (!auth.farms.some((farm) => farm.FarmId === selectedFarmId)) {
+        selectedFarmId = auth.farms[0].FarmId;
+      }
+
+      farmSelect.value = selectedFarmId;
+      farmSelect.addEventListener("change", async (event) => {
+        selectedFarmId = event.target.value;
+        persistFarmSelection();
+        updateDashboardTitle();
+        await Promise.all([updateSensors(), updateEvents(), refreshAlerts(), updateAutoModeState(), updateSmsStatus()]);
       });
     }
 
-
-    function updateDashboardTitle() {
-      const heading = document.querySelector('.dashboard-header h1');
-      const userName = document.querySelector('.user-name');
-      const farmLocation = document.querySelector('.farm-location');
-      const farmCrop = document.querySelector('.farm-crop');
-      const farm = getActiveFarm();
-      if (userName) {
-        userName.textContent = auth?.user?.name || auth?.user?.email || 'farmer';
-      }
-      if (farmLocation) {
-        farmLocation.textContent = farm.Location || 'Field 1';
-      }
-      if (farmCrop) {
-        farmCrop.textContent = farm.CropType ? `Crop: ${farm.CropType}` : 'Crop: Unknown';
-      }
-      if (!heading) return;
-      heading.textContent = `${farm.Location || 'Field 1'} Dashboard`;
+    function updateLastSync(timestamp) {
+      const label = document.querySelector(".status.last-update");
+      if (!label) return;
+      const value = timestamp ? new Date(timestamp) : new Date();
+      label.textContent = `Last: ${value.toLocaleTimeString()}`;
     }
 
-    populateFarmSelector();
+    function showControlFeedback(message, isError = false) {
+      const feedback = document.getElementById("controlFeedback");
+      if (!feedback) return;
+
+      feedback.innerHTML = `<i class="fas ${isError ? "fa-triangle-exclamation" : "fa-circle-check"}"></i> ${message}`;
+      feedback.className = `sms-indicator ${isError ? "pending" : "ready"}`;
+    }
+
+    function updateRecentActivity(latest) {
+      const list = document.querySelector(".activity-list");
+      if (!list) return;
+
+      const moistureValue = latest?.soilMoisture ?? latest?.SoilMoisture;
+      const temperatureValue = latest?.temperature ?? latest?.Temperature;
+      const humidityValue = latest?.humidity ?? latest?.Humidity;
+      const moisture = moistureValue != null ? `${moistureValue.toFixed(1)}%` : document.querySelector(".moisture")?.textContent || "N/A";
+      const temperature = temperatureValue != null ? `${temperatureValue.toFixed(1)}°C` : document.querySelector(".temp")?.textContent || "N/A";
+      const humidity = humidityValue != null ? `${humidityValue.toFixed(0)}%` : document.querySelector(".humidity")?.textContent || "N/A";
+
+      list.innerHTML = `
+        <li><i class="fas fa-seedling"></i> Moisture updated to ${moisture}</li>
+        <li><i class="fas fa-temperature-half"></i> Temperature now ${temperature}</li>
+        <li><i class="fas fa-cloud-rain"></i> Humidity at ${humidity}</li>
+        <li><i class="fas fa-sync"></i> Dashboard synced with backend data</li>
+      `;
+    }
 
     async function updateSensors() {
       try {
         const response = await fetchWithAuth(`${apiBase}/data/farms/${selectedFarmId}/sensors?hours=24`);
+        if (!response.ok) {
+          throw new Error("Sensor API unavailable");
+        }
 
-        if (response.ok) {
-          const data = await response.json();
-          if (data.latest) {
-            document.querySelector('.moisture').textContent = (data.latest.SoilMoisture ?? 0).toFixed(1) + '%';
-            document.querySelector('.temp').textContent = (data.latest.Temperature ?? 0).toFixed(1) + '°C';
-            document.querySelector('.humidity').textContent = (data.latest.Humidity ?? 0).toFixed(0) + '%';
-            updateLastSync();
-          }
-          if (data.all && data.all.length > 0) {
-            updateChart(data.all);
-          }
-        } else {
-          console.log('API not available or unauthorized, using demo data');
-          fallbackSensorValues();
-          updateLastSync();
+        const data = await response.json();
+        if (data.latest) {
+          document.querySelector(".moisture").textContent = `${(data.latest.soilMoisture ?? data.latest.SoilMoisture ?? 0).toFixed(1)}%`;
+          document.querySelector(".temp").textContent = `${(data.latest.temperature ?? data.latest.Temperature ?? 0).toFixed(1)}°C`;
+          document.querySelector(".humidity").textContent = `${(data.latest.humidity ?? data.latest.Humidity ?? 0).toFixed(0)}%`;
+          updateLastSync(data.latest.timestamp || data.latest.Timestamp);
+          updateRecentActivity(data.latest);
+        }
+
+        if (data.all?.length) {
+          updateChart(data.all);
         }
       } catch (error) {
-        console.log('API error, using demo data', error);
-        fallbackSensorValues();
+        console.log("Sensor API unavailable, using local fallback", error);
+        document.querySelector(".moisture").textContent = `${(25 + Math.random() * 8).toFixed(1)}%`;
+        document.querySelector(".temp").textContent = `${(25 + Math.random() * 3).toFixed(1)}°C`;
+        document.querySelector(".humidity").textContent = `${(65 + Math.random() * 10).toFixed(0)}%`;
+        updateLastSync();
+        updateRecentActivity();
       }
-    }
-
-    function fallbackSensorValues() {
-      document.querySelector('.moisture').textContent = (25 + Math.random() * 8).toFixed(1) + '%';
-      document.querySelector('.temp').textContent = (25 + Math.random() * 3).toFixed(1) + '°C';
-      document.querySelector('.humidity').textContent = (65 + Math.random() * 10).toFixed(0) + '%';
     }
 
     function updateChart(readings) {
-      const ctx = document.getElementById('moistureChart')?.getContext('2d');
-      if (ctx && readings.length > 0) {
-        const labels = readings.slice(-7).map(r => new Date(r.Timestamp).toLocaleTimeString());
-        const data = readings.slice(-7).map(r => r.SoilMoisture ?? 0);
-        new Chart(ctx, {
-          type: 'line',
-          data: {
-            labels: labels,
-            datasets: [{
-              label: 'Soil Moisture %',
-              data: data,
-              borderColor: '#4CAF50',
-              backgroundColor: 'rgba(76, 175, 80, 0.1)',
-              tension: 0.4,
-              fill: true
-            }]
-          },
-          options: {
-            responsive: true,
-            plugins: { legend: { display: false } },
-            scales: {
-              y: { beginAtZero: true, max: 100 }
-            }
-          }
-        });
+      const ctx = document.getElementById("moistureChart")?.getContext("2d");
+      if (!ctx || !readings.length) return;
+
+      const points = [...readings].reverse().slice(-7);
+      const labels = points.map((reading) => new Date(reading.timestamp || reading.Timestamp).toLocaleTimeString());
+      const data = points.map((reading) => reading.soilMoisture ?? reading.SoilMoisture ?? 0);
+
+      if (moistureChart) {
+        moistureChart.destroy();
       }
+
+      moistureChart = new Chart(ctx, {
+        type: "line",
+        data: {
+          labels,
+          datasets: [{
+            label: "Soil Moisture %",
+            data,
+            borderColor: "#4CAF50",
+            backgroundColor: "rgba(76, 175, 80, 0.1)",
+            tension: 0.4,
+            fill: true
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: { legend: { display: false } },
+          scales: { y: { beginAtZero: true, max: 100 } }
+        }
+      });
     }
 
     async function updateEvents() {
-      const eventList = document.querySelector('.event-list');
-      if (!eventList) return;
+      const list = document.querySelector(".event-list");
+      if (!list) return;
 
       try {
         const response = await fetchWithAuth(`${apiBase}/data/farms/${selectedFarmId}/events?limit=5`);
-
-        if (response.ok) {
-          const events = await response.json();
-          eventList.innerHTML = events.map(event => `
-            <li><i class="fas fa-check-circle"></i> ${event.triggerType.replace(/\b\w/g, c => c.toUpperCase())}: ${new Date(event.startTime).toLocaleTimeString()} (${event.duration ?? 'n/a'} min)` +
-            `</li>`
-          ).join('');
-          return;
+        if (!response.ok) {
+          throw new Error("Events API unavailable");
         }
-      } catch (error) {
-        console.warn('Failed to load events from API', error);
-      }
 
-      const fallbackEvents = [
-        'Irrigation started in Zone 1',
-        'Moisture level stabilized',
-        'Valve cycle completed',
-        'Data sync complete'
-      ];
-      eventList.innerHTML = fallbackEvents.map(event => `<li><i class="fas fa-check-circle"></i> ${event}</li>`).join('');
+        const events = await response.json();
+        list.innerHTML = events.length
+          ? events.map((event) => `<li><i class="fas fa-check-circle"></i> ${event.triggerType || event.TriggerType}: ${new Date(event.startTime || event.StartTime).toLocaleTimeString()} (${event.duration ?? event.Duration ?? "n/a"} min)</li>`).join("")
+          : "<li>No irrigation events recorded yet.</li>";
+      } catch (error) {
+        console.warn("Failed to load events", error);
+      }
     }
 
-    async function updateAlerts() {
-      const alertList = document.querySelector('.alert-list');
-      if (!alertList) return;
+    async function refreshAlerts() {
+      await window.updateAlerts();
+    }
+
+    async function updateAutoModeState() {
+      const button = document.getElementById("autoModeBtn");
+      const toggle = document.getElementById("autoModeSwitch");
+      if (!button || !toggle) return;
 
       try {
-        const response = await fetchWithAuth(`${apiBase}/data/farms/${selectedFarmId}/alerts?resolved=false`);
-
-        if (response.ok) {
-          const alerts = await response.json();
-          alertList.innerHTML = alerts.map(alert => `
-            <li><i class="fas fa-exclamation-circle"></i> ${alert.message} <span class="alert-meta">(${new Date(alert.timestamp).toLocaleTimeString()})</span></li>
-          `).join('');
-          return;
-        }
+        const state = await getAutoModeForFarm(selectedFarmId);
+        toggle.checked = !!state.enabled;
+        button.textContent = state.enabled ? i18n[currentLang].pauseAuto : i18n[currentLang].resumeAuto;
       } catch (error) {
-        console.warn('Failed to load alerts from API', error);
+        console.warn("Failed to fetch auto mode", error);
+        toggle.checked = true;
+        button.textContent = i18n[currentLang].pauseAuto;
       }
-
-      const fallbackAlerts = [
-        'Low moisture alert triggered',
-        'Pump health nominal',
-        'Battery level stable'
-      ];
-      alertList.innerHTML = fallbackAlerts.map(alert => `<li><i class="fas fa-exclamation-circle"></i> ${alert}</li>`).join('');
     }
 
-    async function triggerIrrigation() {
+    async function updateSmsStatus() {
+      const smsEl = document.getElementById("smsStatus");
+      if (!smsEl) return;
+
       try {
-        const response = await fetchWithAuth(`${apiBase}/irrigation/farms/${selectedFarmId}/irrigate`, {
+        const status = await requestJson(`${apiBase}/notifications/status`);
+        const label = !status.enabled
+          ? "Disabled"
+          : status.configured
+            ? (status.lastSentAt ? `Last sent ${new Date(status.lastSentAt).toLocaleTimeString()}` : `Ready (${status.mode})`)
+            : "Setup needed";
 
-          method: 'POST',
-          body: JSON.stringify({ manual: true, duration: 12, estimatedLitres: 420 }),
-          headers: { 'Content-Type': 'application/json' }
-        });
-
-        if (response.ok) {
-          await updateEvents();
-          await updateAlerts();
-          alert('✅ Irrigation command sent to the backend. Event has been logged.');
-          return;
-        }
+        smsEl.innerHTML = `<i class="fas fa-sms"></i> SMS: ${label}`;
+        smsEl.className = `sms-indicator ${status.enabled && status.configured ? "ready" : "pending"}`;
       } catch (error) {
-        console.warn('Irrigation API failed', error);
+        smsEl.innerHTML = '<i class="fas fa-sms"></i> SMS: Waiting for backend';
+        smsEl.className = "sms-indicator pending";
       }
-
-      alert('Irrigation command sent locally. Backend unavailable.');
     }
 
+    async function handleIrrigate() {
+      const button = document.getElementById("irrigateBtn");
+      try {
+        await triggerIrrigationForFarm(selectedFarmId, button);
+        showControlFeedback("Manual irrigation triggered successfully.");
+        await Promise.all([updateSensors(), updateEvents(), refreshAlerts(), updateSmsStatus()]);
+      } catch (error) {
+        showControlFeedback(error.message || "Unable to trigger irrigation.", true);
+      }
+    }
+
+    async function handleSimulate() {
+      const button = document.getElementById("simulateBtn");
+      try {
+        const result = await simulateSensorReadingForFarm(selectedFarmId, button);
+        showControlFeedback(result?.alert ? "Mock dry reading posted and alert generated." : "Mock sensor reading posted successfully.");
+        await Promise.all([updateSensors(), updateEvents(), refreshAlerts(), updateSmsStatus()]);
+      } catch (error) {
+        showControlFeedback(error.message || "Unable to simulate reading.", true);
+      }
+    }
+
+    async function handleAutoMode(enabled) {
+      try {
+        const result = await setAutoModeForFarm(selectedFarmId, enabled);
+        showControlFeedback(result.message);
+      } catch (error) {
+        showControlFeedback(error.message || "Unable to update auto mode.", true);
+      } finally {
+        await updateAutoModeState();
+      }
+    }
+
+    document.getElementById("langToggle")?.addEventListener("click", () => {
+      currentLang = currentLang === "en" ? "sw" : "en";
+      localStorage.setItem("lang", currentLang);
+      document.documentElement.lang = currentLang;
+      updateAllTranslations();
+      updateDashboardTitle();
+      updateAutoModeState();
+    });
+
+    document.getElementById("irrigateBtn")?.addEventListener("click", handleIrrigate);
+    document.getElementById("simulateBtn")?.addEventListener("click", handleSimulate);
+    document.getElementById("autoModeBtn")?.addEventListener("click", async () => {
+      const state = await getAutoModeForFarm(selectedFarmId).catch(() => ({ enabled: true }));
+      await handleAutoMode(!state.enabled);
+    });
+    document.getElementById("autoModeSwitch")?.addEventListener("change", async (event) => {
+      await handleAutoMode(event.target.checked);
+    });
+
+loadDashboardState();
+    populateFarmSelector();
+    updateAllTranslations();
     updateDashboardTitle();
     updateSensors();
     updateEvents();
-    updateAlerts();
-    async function updateSmsStatus() {
-      const smsEl = document.getElementById('smsStatus');
-      if (!smsEl) return;
-      
-      try {
-        // Mock backend /notifications/status - try real API first
-        const response = await fetchWithAuth(`${apiBase}/notifications/status`);
-        if (response.ok) {
-          const status = await response.json();
-          smsEl.textContent = `SMS: ${status.lastSent ? 'Sent ' + new Date(status.lastSent).toLocaleTimeString() : 'Ready'}`;
-          smsEl.className = 'sms-indicator ready';
-          return;
-        }
-      } catch (error) {
-        console.log('SMS status API unavailable, using mock');
-      }
-      
-      // Mock rotating status
-      const statuses = ['Ready ✅', 'Sent 14:23', 'Pending 📱', 'Ready ✅'];
-      const index = Math.floor(Math.random() * statuses.length);
-      smsEl.innerHTML = `<i class="fas fa-sms"></i> ${statuses[index]}`;
-      smsEl.className = `sms-indicator ${index === 2 ? 'pending' : 'ready'}`;
-    }
+    refreshAlerts();
+    updateAutoModeState();
+    updateSmsStatus();
+
 
     setInterval(() => {
       updateSensors();
       updateEvents();
-      updateAlerts();
+      refreshAlerts();
+      updateAutoModeState();
       updateSmsStatus();
-    }, 10000); // Faster polling 10s
+    }, 10000);
   </script>
 </body>
 </html>

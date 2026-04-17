@@ -15,19 +15,18 @@
         <i class="fas fa-seedling"></i> AquaSense
       </a>
       <ul class="nav-links">
-        <li><a href="index.html">Home</a></li>
-        <li><a href="about.html">About</a></li>
-        <li><a href="problem.html">Problem</a></li>
-        <li><a href="features.html">Features</a></li>
-        <li><a href="how.html" class="active">How It Works</a></li>
-        <li><a href="tech.html">Tech</a></li>
-        <li><a href="research.html">Research</a></li>
-        <li><a href="demo.html">Demo</a></li>
-        <li><a href="contact.html">Contact</a></li>
-        <li><a href="login.html">Login</a></li>
-        <li><a href="register.html">Register</a></li>
+        <li><a href="index.html" data-lang="nav.home">Home</a></li>
+        <li><a href="features.html" data-lang="nav.features">Features</a></li>
+        <li><a href="how.html" class="active" data-lang="nav.how">How It Works</a></li>
+        <li><a href="dashboard.html" data-lang="nav.dashboard">Dashboard</a></li>
+        <li><a href="login.html" data-lang="nav.login">Login</a></li>
+        <li><a href="register.html" data-lang="nav.register">Register</a></li>
       </ul>
       <div class="auth-nav">
+        <button class="lang-toggle" id="langToggle" onclick="toggleLanguage()">
+          <i class="fas fa-globe"></i>
+          <span id="langText">EN</span>
+        </button>
         <a href="login.html" class="login-icon" title="Sign In">
           <i class="fas fa-user-circle"></i>
         </a>
@@ -42,13 +41,13 @@
 
   <section class="hero hero-small">
     <div class="container">
-      <h1>Intelligent Workflow</h1>
-      <p>From soil to SMS - complete automation pipeline</p>
+      <h1 data-lang="how.title">Intelligent Workflow</h1>
+      <p data-lang="how.tagline">From soil to SMS - complete automation pipeline</p>
     </div>
   </section>
 
   <section class="section">
-    <h2 class="section-title">Project Objectives</h2>
+    <h2 class="section-title" data-lang="how.objectives.title">Project Objectives</h2>
     <div class="grid-2 gap-8">
       <div class="feature-card">
         <h3>1. Sensor Deployment</h3>
@@ -74,110 +73,147 @@
   </section>
 
   <section class="section">
-    <h2 class="section-title">System Flow</h2>
+    <h2 class="section-title" data-lang="how.flow.title">System Flow</h2>
     <div class="timeline">
       <div class="timeline-item">
         <div class="timeline-dot"></div>
         <div class="timeline-content left">
           <i class="fas fa-tint"></i>
-          <h3>1. Data Collection</h3>
-          <p>Soil moisture, temperature, humidity sensors sample every <strong>15 minutes</strong>. Multi-depth readings for accuracy.</p>
+          <h3 data-lang="how.flow.step1">1. Data Collection</h3>
+          <p data-lang="how.flow.step1.desc">Soil moisture, temperature, humidity sensors sample every <strong>15 minutes</strong>. Multi-depth readings for accuracy.</p>
         </div>
       </div>
       <div class="timeline-item">
         <div class="timeline-dot"></div>
         <div class="timeline-content right">
           <i class="fas fa-microchip"></i>
-          <h3>2. Smart Processing</h3>
-          <p>ESP32 microcontroller analyzes data against <strong>crop thresholds</strong>, weather forecasts, and historical patterns.</p>
+          <h3 data-lang="how.flow.step2">2. Smart Processing</h3>
+          <p data-lang="how.flow.step2.desc">ESP32 microcontroller analyzes data against <strong>crop thresholds</strong>, weather forecasts, and historical patterns.</p>
         </div>
       </div>
       <div class="timeline-item">
         <div class="timeline-dot"></div>
         <div class="timeline-content left">
           <i class="fas fa-play-circle"></i>
-          <h3>3. Auto Trigger</h3>
-          <p>Solenoid valve opens for <strong>precise duration</strong>. Flow rate monitored, pump protected from dry run.</p>
+          <h3 data-lang="how.flow.step3">3. Auto Trigger</h3>
+          <p data-lang="how.flow.step3.desc">Solenoid valve opens for <strong>precise duration</strong>. Flow rate monitored, pump protected from dry run.</p>
         </div>
       </div>
       <div class="timeline-item">
         <div class="timeline-dot"></div>
         <div class="timeline-content right">
           <i class="fas fa-sms"></i>
-          <h3>4. Farmer Alert</h3>
-          <p>SMS confirmation + dashboard update. <strong>No smartphone needed</strong> for basic monitoring.</p>
+          <h3 data-lang="how.flow.step4">4. Farmer Alert</h3>
+          <p data-lang="how.flow.step4.desc">SMS confirmation + dashboard update. <strong>No smartphone needed</strong> for basic monitoring.</p>
         </div>
       </div>
       <div class="timeline-item">
         <div class="timeline-dot"></div>
         <div class="timeline-content left">
           <i class="fas fa-database"></i>
-          <h3>5. Cloud Storage</h3>
-          <p>All events logged to PostgreSQL. Trends analyzed for <strong>predictive optimization</strong>.</p>
+          <h3 data-lang="how.flow.step5">5. Cloud Storage</h3>
+          <p data-lang="how.flow.step5.desc">All events logged to SQLite. Trends analyzed for <strong>predictive optimization</strong>.</p>
         </div>
       </div>
     </div>
   </section>
 
   <section class="section" style="background: var(--light-bg);">
-    <h2 class="section-title">Crop Profiles</h2>
+    <h2 class="section-title" data-lang="how.crops.title">Crop Profiles</h2>
     <div class="grid-3 gap-8">
       <div class="profile-card">
-        <h3>Maize</h3>
-        <p>Moisture: 25-35% | Cycle: 90 days</p>
+        <h3 data-lang="how.crops.maize">Maize</h3>
+        <p data-lang="how.crops.maize.val">Moisture: 25-35% | Cycle: 90 days</p>
       </div>
       <div class="profile-card">
-        <h3>Tomato</h3>
-        <p>Moisture: 30-45% | Cycle: 60 days</p>
+        <h3 data-lang="how.crops.tomato">Tomato</h3>
+        <p data-lang="how.crops.tomato.val">Moisture: 30-45% | Cycle: 60 days</p>
       </div>
       <div class="profile-card">
-        <h3>Beans</h3>
-        <p>Moisture: 20-30% | Cycle: 75 days</p>
+        <h3 data-lang="how.crops.beans">Beans</h3>
+        <p data-lang="how.crops.beans.val">Moisture: 20-30% | Cycle: 75 days</p>
       </div>
     </div>
   </section>
 
   <section class="section">
     <div class="flow-diagram">
-      <div class="flow-node sensor">
-        Sensors
-      </div>
+      <div class="flow-node sensor" data-lang="how.diagram.sensor">Sensors</div>
       <div class="flow-arrow">→</div>
-      <div class="flow-node esp32">
-        ESP32 Brain
-      </div>
+      <div class="flow-node esp32" data-lang="how.diagram.esp32">ESP32 Brain</div>
       <div class="flow-arrow">→</div>
-      <div class="flow-node valve">
-        Valve
-      </div>
+      <div class="flow-node valve" data-lang="how.diagram.valve">Valve</div>
       <div class="flow-arrow">→</div>
-      <div class="flow-node cloud">
-        Cloud
-      </div>
+      <div class="flow-node cloud" data-lang="how.diagram.cloud">Cloud</div>
       <div class="flow-arrow">→</div>
-      <div class="flow-node phone">
-        Farmer Phone
+      <div class="flow-node phone" data-lang="how.diagram.phone">Farmer Phone</div>
+    </div>
+  </section>
+
+  <section class="section" style="background: var(--light-bg);">
+    <h2 class="section-title" data-lang="how.tech.title">Technology Stack</h2>
+    <div class="tech-grid">
+      <div class="tech-card">
+        <i class="fas fa-microchip tech-icon"></i>
+        <h3 data-lang="how.tech.esp32">ESP32 Microcontroller</h3>
+        <p data-lang="how.tech.esp32.val">WiFi + Bluetooth + GPIO pins + Low power + Arduino compatible</p>
+      </div>
+      <div class="tech-card">
+        <i class="fas fa-tint tech-icon"></i>
+        <h3 data-lang="how.tech.sensor">Capacitive Sensors</h3>
+        <p data-lang="how.tech.sensor.val">Soil moisture (0-100%) + Temperature + Humidity + Stainless probes</p>
+      </div>
+      <div class="tech-card">
+        <i class="fas fa-bolt tech-icon"></i>
+        <h3 data-lang="how.tech.solar">Solar Power</h3>
+        <p data-lang="how.tech.solar.val">10W panel + 12V 7Ah battery + MPPT charge controller + 48hr autonomy</p>
+      </div>
+      <div class="tech-card">
+        <i class="fas fa-cogs tech-icon"></i>
+        <h3 data-lang="how.tech.valve">Solenoid Valve</h3>
+        <p data-lang="how.tech.valve.val">12V DC + 1" pipe + 0.2-0.8MPa + IP67 waterproof</p>
       </div>
     </div>
   </section>
 
-  <a href="demo.html" class="btn fixed-btn">See Live Demo</a>
+  <section class="section">
+    <h2 class="section-title" data-lang="how.software.title">Software & Security</h2>
+    <div class="features-grid">
+      <div class="feature-card">
+        <i class="fas fa-server"></i>
+        <h3 data-lang="how.software.backend">Backend</h3>
+        <p data-lang="how.software.backend.val">PHP REST API + PDO SQLite + JWT Auth + Timeseries data storage</p>
+      </div>
+      <div class="feature-card">
+        <i class="fas fa-laptop-code"></i>
+        <h3 data-lang="how.software.frontend">Frontend</h3>
+        <p data-lang="how.software.frontend.val">HTML5/CSS3 + Vanilla JS + Chart.js + Responsive PWA + Mobile-first design</p>
+      </div>
+      <div class="feature-card">
+        <i class="fas fa-shield-alt"></i>
+        <h3 data-lang="how.software.security">Security</h3>
+        <p data-lang="how.software.security.val">JWT tokens + Password hashing + SQL injection protection + Prepared statements</p>
+      </div>
+      <div class="feature-card">
+        <i class="fas fa-battery-full"></i>
+        <h3 data-lang="how.software.reliability">Reliability</h3>
+        <p data-lang="how.software.reliability.val">Error handling + Data validation + Backup ready + Auto recovery + SMS fallback</p>
+      </div>
+    </div>
+  </section>
+
+  <a href="dashboard.html" class="btn fixed-btn" data-lang="how.access">Access Dashboard</a>
 
   <footer>
     <div class="footer-links">
-      <a href="index.html">Home</a>
-      <a href="about.html">About</a>
-      <a href="problem.html">Problem</a>
-      <a href="features.html">Features</a>
-      <a href="how.html">How It Works</a>
-      <a href="tech.html">Tech</a>
-      <a href="research.html">Research</a>
-      <a href="demo.html">Demo</a>
-      <a href="contact.html">Contact</a>
-      <a href="login.html">Login</a>
-      <a href="register.html">Register</a>
+      <a href="index.html" data-lang="nav.home">Home</a>
+      <a href="features.html" data-lang="nav.features">Features</a>
+      <a href="how.html" data-lang="nav.how">How It Works</a>
+      <a href="dashboard.html" data-lang="nav.dashboard">Dashboard</a>
+      <a href="contact.html" data-lang="nav.contact">Contact</a>
+      <a href="login.html" data-lang="nav.login">Login</a>
     </div>
-    <p>&copy; 2026 Lewis Ondigi Abuga | The Cooperative University of Kenya</p>
+    <p data-lang="footer.copyright">&copy; 2026 Lewis Ondigi Abuga | The Cooperative University of Kenya</p>
   </footer>
 
   <script src="script.js"></script>

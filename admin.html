@@ -18,7 +18,7 @@
       <ul class="nav-links">
         <li><a href="index.html">Home</a></li>
         <li><a href="about.html">About</a></li>
-        <li><a href="demo.html">Single Farm</a></li>
+        <li><a href="dashboard.html">Single Farm</a></li>
         <li><a href="admin.html" class="active">Admin Dashboard</a></li>
         <li><a href="login.html">Login</a></li>
       </ul>
@@ -56,7 +56,6 @@
     </div>
 
     <div class="dashboard-grid">
-      <!-- Farm Overview Table -->
       <div class="card" style="grid-column: span 2;">
         <h3>Farm Overview</h3>
         <div class="table-container">
@@ -78,13 +77,11 @@
         </div>
       </div>
 
-      <!-- Analytics Charts -->
       <div class="card chart-card">
         <h3>All Farms - Moisture Average</h3>
         <canvas id="overviewChart" height="200"></canvas>
       </div>
 
-      <!-- Recent Alerts -->
       <div class="card system-alerts">
         <h3>System Alerts (All Farms)</h3>
         <ul class="alert-list" id="globalAlerts">
@@ -92,7 +89,6 @@
         </ul>
       </div>
 
-      <!-- System Stats -->
       <div class="card">
         <h3>System Statistics</h3>
         <div class="stats-grid">
@@ -106,10 +102,10 @@
           </div>
           <div>
             <div class="stat-number" data-target="0" id="totalSMS">0</div>
-            <span>SMS Sent</span>
+            <span>Open Alerts</span>
           </div>
           <div>
-            <div class="stat-number" data-target="0" id="uptime">100</div>
+            <div class="stat-number" data-target="100" id="uptime">100</div>
             <span>Uptime %</span>
           </div>
         </div>
@@ -121,66 +117,85 @@
   <script>
     const auth = getAuthData();
     if (!auth?.loggedIn) {
-      window.location.href = 'login.html';
+      window.location.href = "login.html";
     }
 
-    const apiBase = window.apiBase || 'http://localhost:5000/api';
     let allFarmsData = [];
-    let currentLang = localStorage.getItem('lang') || 'en';
+    let overviewChart;
 
     async function loadAllFarms() {
       try {
         const response = await fetchWithAuth(`${apiBase}/data/farms`);
-        if (response.ok) {
-          allFarmsData = await response.json();
-          document.getElementById('farmCount').textContent = allFarmsData.length || 0;
-          renderFarmTable();
-          renderOverviewChart();
-          loadGlobalAlerts();
-          animateStats();
+        if (!response.ok) {
+          throw new Error("Farm API unavailable");
         }
+
+        allFarmsData = await response.json();
+        document.getElementById("farmCount").textContent = allFarmsData.length || 0;
+        renderFarmTable();
+        renderOverviewChart();
+        await loadGlobalAlerts();
+        animateStats();
       } catch (error) {
-        console.log('API unavailable, using demo data');
+        console.log("API unavailable, using local fallback", error);
         allFarmsData = [
-          { FarmId: '1', Location: 'Field 1', CropType: 'Maize', latest: { SoilMoisture: 28, Status: 'OK' } },
-          { FarmId: '2', Location: 'Field 2', CropType: 'Tomatoes', latest: { SoilMoisture: 42, Status: 'Dry' } },
-          { FarmId: '3', Location: 'Field 3', CropType: 'Beans', latest: { SoilMoisture: 65, Status: 'Optimal' } }
+          { FarmId: "1", Location: "Field 1", CropType: "Maize", latest: { SoilMoisture: 28 }, status: "Dry", sensorCount: 3, openAlertCount: 1 },
+          { FarmId: "2", Location: "Field 2", CropType: "Tomatoes", latest: { SoilMoisture: 42 }, status: "Stable", sensorCount: 3, openAlertCount: 0 },
+          { FarmId: "3", Location: "Field 3", CropType: "Beans", latest: { SoilMoisture: 65 }, status: "Optimal", sensorCount: 3, openAlertCount: 0 }
         ];
-        document.getElementById('farmCount').textContent = allFarmsData.length;
+        document.getElementById("farmCount").textContent = allFarmsData.length;
         renderFarmTable();
         renderOverviewChart();
       }
     }
 
+    function getRowClass(status) {
+      return (status || "offline").toLowerCase().replace(/\s+/g, "-");
+    }
+
     function renderFarmTable() {
-      const tbody = document.querySelector('#farmTable tbody');
-      tbody.innerHTML = allFarmsData.map(farm => `
-        <tr class="${farm.latest?.Status?.toLowerCase() || 'ok'}">
+      const tbody = document.querySelector("#farmTable tbody");
+      if (!tbody) return;
+
+      tbody.innerHTML = allFarmsData.map((farm) => `
+        <tr class="${getRowClass(farm.status)}">
           <td><strong>${farm.Location}</strong></td>
           <td>${farm.Location}</td>
-          <td>${farm.CropType || 'N/A'}</td>
-          <td>${farm.latest?.SoilMoisture ? farm.latest.SoilMoisture + '%' : 'N/A'}</td>
-          <td><span class="status-badge ${farm.latest?.Status?.toLowerCase()}">${farm.latest?.Status || 'Offline'}</span></td>
-          <td><a href="demo.html?farmId=${farm.FarmId}" class="btn btn-secondary" style="font-size: 0.8rem; padding: 0.4rem 0.8rem; min-width: auto;">View</a></td>
+          <td>${farm.CropType || "N/A"}</td>
+          <td>${farm.latest?.soilMoisture != null || farm.latest?.SoilMoisture != null ? `${farm.latest?.soilMoisture ?? farm.latest?.SoilMoisture}%` : "N/A"}</td>
+          <td><span class="status-badge ${getRowClass(farm.status)}">${farm.status || "Offline"}</span></td>
+          <td class="table-actions">
+            <a href="demo.html?farmId=${farm.FarmId}" class="btn btn-secondary action-link">View</a>
+            <button class="btn btn-secondary action-btn" data-farm-id="${farm.FarmId}" data-action="simulate">Simulate</button>
+            <button class="btn btn-secondary action-btn" data-farm-id="${farm.FarmId}" data-action="irrigate">Irrigate</button>
+          </td>
         </tr>
-      `).join('');
+      `).join("");
+
+      tbody.querySelectorAll(".action-btn").forEach((button) => {
+        button.addEventListener("click", handleFarmAction);
+      });
     }
 
     function renderOverviewChart() {
-      const ctx = document.getElementById('overviewChart')?.getContext('2d');
-      if (!ctx || allFarmsData.length === 0) return;
+      const ctx = document.getElementById("overviewChart")?.getContext("2d");
+      if (!ctx || !allFarmsData.length) return;
 
-      const labels = allFarmsData.map(f => f.Location.slice(0,3));
-      const data = allFarmsData.map(f => f.latest?.SoilMoisture || 0);
-      
-      new Chart(ctx, {
-        type: 'bar',
+      const labels = allFarmsData.map((farm) => farm.Location.slice(0, 8));
+      const data = allFarmsData.map((farm) => farm.latest?.soilMoisture ?? farm.latest?.SoilMoisture ?? 0);
+
+      if (overviewChart) {
+        overviewChart.destroy();
+      }
+
+      overviewChart = new Chart(ctx, {
+        type: "bar",
         data: {
           labels,
           datasets: [{
-            label: 'Soil Moisture %',
+            label: "Soil Moisture %",
             data,
-            backgroundColor: data.map(v => v < 35 ? '#FF5722' : v < 60 ? '#FF9800' : '#4CAF50'),
+            backgroundColor: data.map((value) => value < 35 ? "#FF5722" : value < 60 ? "#FF9800" : "#4CAF50"),
             borderRadius: 8,
             borderSkipped: false
           }]
@@ -188,74 +203,87 @@
         options: {
           responsive: true,
           plugins: { legend: { display: false } },
-          scales: {
-            y: { beginAtZero: true, max: 100 }
-          }
+          scales: { y: { beginAtZero: true, max: 100 } }
         }
       });
     }
 
     async function loadGlobalAlerts() {
-      const list = document.getElementById('globalAlerts');
+      const list = document.getElementById("globalAlerts");
+      if (!list) return;
+
       try {
         const response = await fetchWithAuth(`${apiBase}/data/alerts?limit=10`);
-        if (response.ok) {
-          const alerts = await response.json();
-          document.getElementById('alertCount').textContent = alerts.length;
-          list.innerHTML = alerts.map(a => 
-            `<li><i class="fas fa-exclamation-triangle"></i> ${a.message} <small>(${new Date(a.timestamp).toLocaleString()}) - ${a.farmLocation}</small></li>`
-          ).join('') || '<li>No recent alerts</li>';
-          return;
+        if (!response.ok) {
+          throw new Error("Alert API unavailable");
         }
-      } catch {}
-      
-      // Demo alerts
-      list.innerHTML = `
-        <li><i class="fas fa-exclamation-triangle"></i> Low moisture Field 2 <small>(14:23)</small></li>
-        <li><i class="fas fa-exclamation-triangle"></i> Battery low Field 1 <small>(13:45)</small></li>
-      `;
-      document.getElementById('alertCount').textContent = 2;
+
+        const alerts = await response.json();
+        document.getElementById("alertCount").textContent = alerts.filter((alert) => !alert.resolved).length;
+        list.innerHTML = alerts.length
+          ? alerts.map((alert) => `<li><i class="fas fa-exclamation-triangle"></i> ${alert.message} <small>(${new Date(alert.timestamp).toLocaleString()}) - ${alert.farmLocation}</small></li>`).join("")
+          : "<li>No recent alerts</li>";
+      } catch (error) {
+        list.innerHTML = `
+          <li><i class="fas fa-exclamation-triangle"></i> Low moisture Field 2 <small>(14:23)</small></li>
+          <li><i class="fas fa-exclamation-triangle"></i> Battery low Field 1 <small>(13:45)</small></li>
+        `;
+        document.getElementById("alertCount").textContent = "2";
+      }
     }
 
     function animateStats() {
       const stats = {
-        totalSensors: allFarmsData.reduce((sum, f) => sum + (f.sensorCount || 3), 0),
-        totalEvents: Math.floor(Math.random() * 50) + 20,
-        totalSMS: Math.floor(Math.random() * 15) + 5,
-        uptime: 99.8
+        totalSensors: allFarmsData.reduce((sum, farm) => sum + (farm.sensorCount || 0), 0),
+        totalEvents: allFarmsData.length * 4,
+        totalSMS: allFarmsData.reduce((sum, farm) => sum + (farm.openAlertCount || 0), 0)
       };
-      
-      ['totalSensors', 'totalEvents', 'totalSMS'].forEach(id => {
-        const el = document.getElementById(id);
-        if (el) animateCounter(el, stats[id]);
+
+      ["totalSensors", "totalEvents", "totalSMS"].forEach((id) => {
+        const element = document.getElementById(id);
+        if (element) {
+          animateCounter(element, stats[id]);
+        }
       });
     }
 
-    function animateCounter(el, target) {
+    function animateCounter(element, target) {
       let current = 0;
-      const increment = target / 50;
+      const increment = Math.max(target / 30, 1);
       const timer = setInterval(() => {
         current += increment;
         if (current >= target) {
-          el.textContent = Math.round(target);
+          element.textContent = `${Math.round(target)}`;
           clearInterval(timer);
         } else {
-          el.textContent = Math.round(current);
+          element.textContent = `${Math.round(current)}`;
         }
       }, 30);
     }
 
-    document.getElementById('refreshBtn')?.addEventListener('click', () => {
-      loadAllFarms();
-    });
+    async function handleFarmAction(event) {
+      const button = event.currentTarget;
+      const farmId = button.dataset.farmId;
+      const action = button.dataset.action;
 
-    // Initial load
+      try {
+        if (action === "simulate") {
+          await simulateSensorReadingForFarm(farmId, button);
+        } else {
+          await triggerIrrigationForFarm(farmId, button);
+        }
+
+        await loadAllFarms();
+      } catch (error) {
+        alert(error.message || `Unable to ${action} for this farm.`);
+      }
+    }
+
+    document.getElementById("refreshBtn")?.addEventListener("click", loadAllFarms);
+
     loadAllFarms();
     setInterval(loadAllFarms, 30000);
-
-    // Auth check from script.js
     updateLoginIcons();
   </script>
 </body>
 </html>
-

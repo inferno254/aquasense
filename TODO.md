@@ -1,42 +1,23 @@
-# Aquasense Phase 2 Frontend Polish - Detailed Steps
+# AquaSense Error Fix TODO
 
-## Phase 2 Status: 🔄 In Progress
+## Plan Overview
+- Fix PDO_SQLITE "could not find driver" error
+- Enable API endpoints (alerts, events, auto-mode, farms POST)
+- Verify dashboard loads data
 
-**Instructions:** Mark each step ✅ after completion. Use tools to edit files step-by-step.
+## Steps
+- [x] 1. Verify php.ini has pdo_sqlite enabled (DONE: already enabled)
+- [x] 2. Check php_pdo_sqlite.dll exists in ext/ (DONE: exists)
+- [x] 3. Create phpinfo.php + test_check_db.php (DONE)
+- [ ] 4. Test http://aquasense.local/phpinfo.php – confirm pdo_sqlite loaded
+- [ ] 5. Test http://aquasense.local/test_check_db.php – DB OK?
+- [ ] 6. If fail: http://aquasense.local/php/init_db.php
+- [ ] 7. Restart Apache (XAMPP Control Panel)
+- [ ] 8. Test API: http://aquasense.local/php/api/data/farms/550e8400-e29b-41d4-a716-446655440002/alerts
+- [ ] 9. Refresh dashboard.html – no 500s
 
-### Step 2.1: Fix farm selector logic in demo.html + script.js
-- ✅ Edit demo.html inline script: Replace all `farmId` with `selectedFarmId` in API calls (updateSensors, updateEvents, updateAlerts, triggerIrrigation)
-- ✅ Test: Switch farms, verify data updates per farm
-
-### Step 2.2: Add Swahili toggle
-- ✅ Edit demo.html: Add toggle button near farm-selector (`<button id="langToggle">Swahili</button>`)
-- ✅ Edit script.js: Add i18n object (Eng/Swa for key strings: dashboard titles, sensors, buttons, alerts)
-- ✅ Implement lang switch: Update DOM texts, localStorage lang, reload on toggle
-- ✅ Add Swahili translations (use accurate terms: e.g., "Soil Moisture" → "Unyevu wa Udongo")
-
-### Step 2.3: Add SMS status indicator
-- ✅ Edit demo.html: Add div in controls card (`<div id="smsStatus" class="sms-indicator">SMS: Ready</div>`)
-- ✅ Edit script.js: Add updateSmsStatus() fetching recent notifications or mock backend /data/sms-status
-- ✅ Style: Green/red pill in style.css
-
-### Step 2.4: Enhance dashboard (WebSocket/polling, responsiveness)
-- ✅ Edit script.js: Reduce setInterval to 10s, add EventSource for real-time if backend supports
-- ✅ Test multi-farm: Create test farms via register/login
-
-### Step 2.5: Edit style.css for new elements
-- ✅ Add .lang-toggle, .sms-indicator styles (responsive)
-
-### Step 2.6: Create admin.html
-- ✅ Create admin.html: Multi-farm table/chart overview, link to demo.html per farm
-- ✅ Reuse components from demo.html (auth, apiBase, etc.)
-
-### Step 2.7: Test & Mark Complete
-- ✅ Full test: serve_frontend.ps1, backend running, login, switch lang/farm, irrigate, check SMS
-- ✅ Update TODO.md: Phase 2 ✅ → Proceed to Phase 3 Hardware
-
-**Phase 2 Status: ✅ COMPLETE**
-
-**Next:** Phase 3: Hardware Simulation & IoT
-
-
+**PROGRESS:**
+- [x] CLI PHP works perfectly 
+- [ ] Apache PHP fails (different config?)
+**NEXT: http://aquasense.local/phpinfo.php output needed!**
 

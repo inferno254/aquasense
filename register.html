@@ -15,19 +15,18 @@
         <i class="fas fa-seedling"></i> AquaSense
       </a>
       <ul class="nav-links">
-        <li><a href="index.html">Home</a></li>
-        <li><a href="about.html">About</a></li>
-        <li><a href="problem.html">Problem</a></li>
-        <li><a href="features.html">Features</a></li>
-        <li><a href="how.html">How It Works</a></li>
-        <li><a href="tech.html">Tech</a></li>
-        <li><a href="research.html">Research</a></li>
-        <li><a href="demo.html">Demo</a></li>
-        <li><a href="contact.html">Contact</a></li>
-        <li><a href="login.html">Login</a></li>
-        <li><a href="register.html" class="active">Register</a></li>
+        <li><a href="index.html" data-lang="nav.home">Home</a></li>
+        <li><a href="features.html" data-lang="nav.features">Features</a></li>
+        <li><a href="how.html" data-lang="nav.how">How It Works</a></li>
+        <li><a href="dashboard.html" data-lang="nav.dashboard">Dashboard</a></li>
+        <li><a href="login.html" data-lang="nav.login">Login</a></li>
+        <li><a href="register.html" class="active" data-lang="nav.register">Register</a></li>
       </ul>
       <div class="auth-nav">
+        <button class="lang-toggle" id="langToggle" onclick="toggleLanguage()">
+          <i class="fas fa-globe"></i>
+          <span id="langText">EN</span>
+        </button>
         <a href="login.html" class="login-icon" title="Login">
           <i class="fas fa-user-circle"></i>
         </a>
@@ -45,43 +44,43 @@
       <div class="login-card">
         <div class="login-header">
           <i class="fas fa-seedling login-icon-large"></i>
-          <h1>Create Account</h1>
-          <p>Register for your AquaSense dashboard</p>
+          <h1 data-lang="register.title">Create Account</h1>
+          <p data-lang="register.tagline">Join AquaSense to monitor and automate your farm irrigation</p>
         </div>
 
         <form id="registerForm" class="login-form">
           <div class="form-group">
             <div class="input-group">
               <i class="fas fa-user input-icon"></i>
-              <input type="text" id="registerName" placeholder="Full Name" required>
+              <input type="text" id="registerName" data-lang-placeholder="register.name" placeholder="Full Name" required>
             </div>
           </div>
           <div class="form-group">
             <div class="input-group">
               <i class="fas fa-envelope input-icon"></i>
-              <input type="email" id="registerEmail" placeholder="Email" required>
+              <input type="email" id="registerEmail" data-lang-placeholder="register.email" placeholder="Email Address" required>
             </div>
           </div>
           <div class="form-group">
             <div class="input-group">
               <i class="fas fa-phone input-icon"></i>
-              <input type="tel" id="registerPhone" placeholder="Phone Number (optional)">
+              <input type="tel" id="registerPhone" data-lang-placeholder="register.phone" placeholder="Phone Number">
             </div>
           </div>
           <div class="form-group">
             <div class="input-group">
               <i class="fas fa-lock input-icon"></i>
-              <input type="password" id="registerPassword" placeholder="Password" required>
+              <input type="password" id="registerPassword" data-lang-placeholder="register.password" placeholder="Password" required pattern="[a-zA-Z0-9]+" title="Password must contain only letters and numbers">
             </div>
           </div>
           <div class="form-group">
             <div class="input-group">
               <i class="fas fa-lock input-icon"></i>
-              <input type="password" id="registerConfirm" placeholder="Confirm Password" required>
+              <input type="password" id="registerConfirm" data-lang-placeholder="register.confirm" placeholder="Confirm Password" required pattern="[a-zA-Z0-9]+" title="Password must contain only letters and numbers">
             </div>
           </div>
           <button type="submit" class="btn login-btn">
-            <span id="registerText">Register</span>
+            <span id="registerText" data-lang="register.create">Create Account</span>
             <div class="spinner" id="registerSpinner" style="display:none;"></div>
           </button>
           <div class="form-notice" id="registerNotice" style="display:none;"></div>
@@ -96,19 +95,19 @@
 
   <footer>
     <div class="footer-links">
-      <a href="index.html">Home</a>
+      <a href="index.html" data-lang="nav.home">Home</a>
       <a href="about.html">About</a>
       <a href="problem.html">Problem</a>
-      <a href="features.html">Features</a>
-      <a href="how.html">How It Works</a>
+      <a href="features.html" data-lang="nav.features">Features</a>
+      <a href="how.html" data-lang="nav.how">How It Works</a>
       <a href="tech.html">Tech</a>
       <a href="research.html">Research</a>
-      <a href="demo.html">Demo</a>
-      <a href="contact.html">Contact</a>
-      <a href="login.html">Login</a>
-      <a href="register.html">Register</a>
+      <a href="dashboard.html" data-lang="nav.dashboard">Demo</a>
+      <a href="contact.html" data-lang="nav.contact">Contact</a>
+      <a href="login.html" data-lang="nav.login">Login</a>
+      <a href="register.html" data-lang="nav.register">Register</a>
     </div>
-    <p>&copy; 2026 Lewis Ondigi Abuga | The Cooperative University of Kenya</p>
+    <p data-lang="footer.copyright">&copy; 2026 Lewis Ondigi Abuga | The Cooperative University of Kenya</p>
   </footer>
 
   <script src="script.js"></script>

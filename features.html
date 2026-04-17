@@ -15,19 +15,18 @@
         <i class="fas fa-seedling"></i> AquaSense
       </a>
       <ul class="nav-links">
-        <li><a href="index.html">Home</a></li>
-        <li><a href="about.html">About</a></li>
-        <li><a href="problem.html">Problem</a></li>
-        <li><a href="features.html" class="active">Features</a></li>
-        <li><a href="how.html">How It Works</a></li>
-        <li><a href="tech.html">Tech</a></li>
-        <li><a href="research.html">Research</a></li>
-        <li><a href="demo.html">Demo</a></li>
-        <li><a href="contact.html">Contact</a></li>
-        <li><a href="login.html">Login</a></li>
-        <li><a href="register.html">Register</a></li>
+        <li><a href="index.html" data-lang="nav.home">Home</a></li>
+        <li><a href="features.html" class="active" data-lang="nav.features">Features</a></li>
+        <li><a href="how.html" data-lang="nav.how">How It Works</a></li>
+        <li><a href="dashboard.html" data-lang="nav.dashboard">Dashboard</a></li>
+        <li><a href="login.html" data-lang="nav.login">Login</a></li>
+        <li><a href="register.html" data-lang="nav.register">Register</a></li>
       </ul>
       <div class="auth-nav">
+        <button class="lang-toggle" id="langToggle" onclick="toggleLanguage()">
+          <i class="fas fa-globe"></i>
+          <span id="langText">EN</span>
+        </button>
         <a href="login.html" class="login-icon" title="Sign In">
           <i class="fas fa-user-circle"></i>
         </a>
@@ -42,120 +41,451 @@
 
   <section class="hero hero-small">
     <div class="container">
-      <h1>Smart Features</h1>
+      <h1 data-lang="features.title">Smart Features</h1>
       <p>Precision irrigation technology for Kenyan farmers</p>
     </div>
   </section>
 
   <section class="section" style="background: var(--light-bg);">
-    <h2 class="section-title">Core Features</h2>
+    <h2 class="section-title" data-lang="features.title">Core Features</h2>
     <div class="feature-grid">
+
       <div class="feature-card">
         <i class="fas fa-tint feature-icon"></i>
-        <h3>Soil Moisture Sensors</h3>
-        <p>Capacitive sensors monitor soil moisture in real-time. Alerts sent when levels drop below crop thresholds.</p>
+        <h3 data-lang="features.moisture">Soil Moisture Sensors</h3>
+        <p data-lang="features.moisture.desc">Capacitive sensors measure real-time moisture levels. Alerts when critical thresholds reached.</p>
         <ul class="feature-list">
-          <li>Accuracy ±3%</li>
-          <li>15min intervals</li>
-          <li>Multi-depth sensing</li>
+          <li data-lang="features.moisture.accuracy">Accuracy ±3%</li>
+          <li data-lang="features.moisture.interval">15min intervals</li>
+          <li data-lang="features.moisture.depth">Multi-depth sensing</li>
         </ul>
+        <div class="feature-status" id="moistureStatus">
+          <!-- Dynamic content for logged-in users -->
+        </div>
       </div>
+
       <div class="feature-card">
         <i class="fas fa-magic feature-icon"></i>
-        <h3>Auto Irrigation</h3>
-        <p>ESP32 controller opens solenoid valve automatically based on sensor data, weather, and crop needs.</p>
+        <h3 data-lang="features.auto">Auto Irrigation</h3>
+        <p data-lang="features.auto.desc">ESP32 microcontroller triggers water valve automatically based on sensor data and weather.</p>
         <ul class="feature-list">
-          <li>Valve duration optimized</li>
-          <li>Multi-zone control</li>
-          <li>Pump protection</li>
+          <li data-lang="features.auto.valve">Valve duration optimized</li>
+          <li data-lang="features.auto.zone">Multi-zone control</li>
+          <li data-lang="features.auto.pump">Pump protection</li>
         </ul>
+        <div class="feature-status" id="irrigationStatus">
+          <!-- Dynamic content for logged-in users -->
+        </div>
       </div>
+
       <div class="feature-card">
         <i class="fas fa-chart-line feature-icon"></i>
-        <h3>Live Dashboard</h3>
-        <p>Mobile-responsive web interface with real-time graphs, irrigation history, and system controls.</p>
+        <h3 data-lang="features.dashboard">Web Dashboard</h3>
+        <p data-lang="features.dashboard.desc">Live graphs, historical data, irrigation logs. Mobile-responsive ASP.NET dashboard.</p>
         <ul class="feature-list">
-          <li>Live sensor data</li>
-          <li>Historical trends</li>
-          <li>Manual override</li>
+          <li data-lang="features.dashboard.live">Live sensor data</li>
+          <li data-lang="features.dashboard.history">Historical trends</li>
+          <li data-lang="features.dashboard.manual">Manual override</li>
         </ul>
+        <div class="feature-status" id="dashboardStatus">
+          <a href="login.html" class="dashboard-link" id="dashboardLink">
+            <i class="fas fa-lock"></i> <span data-lang="features.dashboard.login">Login to Access Dashboard</span>
+          </a>
+          <p class="feature-note" id="dashboardNote" data-lang="features.dashboard.note">View live farm data, control irrigation, and monitor sensors after logging in.</p>
+        </div>
       </div>
+
       <div class="feature-card">
         <i class="fas fa-sms feature-icon"></i>
-        <h3>SMS Alerts</h3>
-        <p>Critical notifications sent to basic phones - low moisture, irrigation events, system errors.</p>
+        <h3 data-lang="features.sms">SMS Alerts</h3>
+        <p data-lang="features.sms.desc">Critical notifications sent to basic phones - low moisture, irrigation events, system errors.</p>
         <ul class="feature-list">
-          <li>Works on all phones</li>
-          <li>No internet required</li>
-          <li>Custom thresholds</li>
+          <li data-lang="features.sms.allphones">Works on all phones</li>
+          <li data-lang="features.sms.nointernet">No internet required</li>
+          <li data-lang="features.sms.thresholds">Custom thresholds</li>
         </ul>
+        <div class="feature-status" id="smsStatus">
+          <!-- Dynamic content for logged-in users -->
+        </div>
       </div>
+
       <div class="feature-card">
         <i class="fas fa-solar-panel feature-icon"></i>
-        <h3>Solar Powered</h3>
-        <p>Complete off-grid operation. Solar panel + battery backup for rural reliability.</p>
+        <h3 data-lang="features.solar">Solar Powered</h3>
+        <p data-lang="features.solar.desc">Complete off-grid operation. Solar panel + battery backup for rural reliability.</p>
         <ul class="feature-list">
-          <li>10W panel included</li>
-          <li>48hr battery</li>
-          <li>Low power design</li>
+          <li data-lang="features.solar.panel">10W panel included</li>
+          <li data-lang="features.solar.battery">48hr battery</li>
+          <li data-lang="features.solar.lowpower">Low power design</li>
         </ul>
+        <div class="feature-status" id="solarStatus">
+          <!-- Dynamic content for logged-in users -->
+        </div>
       </div>
+
       <div class="feature-card">
         <i class="fas fa-database feature-icon"></i>
-        <h3>Cloud Analytics</h3>
-        <p>PostgreSQL database stores all readings for trend analysis, yield prediction, system optimization.</p>
+        <h3 data-lang="features.analytics">Cloud Analytics</h3>
+        <p data-lang="features.analytics.desc">SQLite database stores all readings for trend analysis, yield prediction, system optimization.</p>
         <ul class="feature-list">
-          <li>1yr data retention</li>
-          <li>AI crop insights</li>
-          <li>Export reports</li>
+          <li data-lang="features.analytics.retention">1yr data retention</li>
+          <li data-lang="features.analytics.ai">AI crop insights</li>
+          <li data-lang="features.analytics.export">Export reports</li>
         </ul>
+        <div class="feature-status" id="analyticsStatus">
+          <!-- Dynamic content for logged-in users -->
+        </div>
       </div>
+
     </div>
   </section>
 
+  <!-- Technical Specifications -->
   <section class="section">
-    <h2 class="section-title">Technical Specifications</h2>
+    <h2 class="section-title" data-lang="specs.title">Technical Specifications</h2>
     <div class="grid-3 gap-8">
+
       <div class="spec-card">
         <i class="fas fa-microchip"></i>
-        <h3>Hardware</h3>
-        <p>ESP32 + Capacitive sensors + Solenoid valve + Solar 10W + Battery 48hr</p>
+        <h3 data-lang="specs.hardware">Hardware</h3>
+        <p data-lang="specs.hardware.val">ESP32 + Capacitive sensors + Solenoid valve + Solar 10W + Battery 48hr</p>
       </div>
       <div class="spec-card">
         <i class="fas fa-cloud"></i>
-        <h3>Backend</h3>
-        <p>PostgreSQL + Node.js API + SMS gateway + Mobile dashboard</p>
+        <h3 data-lang="specs.backend">Backend</h3>
+        <p data-lang="specs.backend.val">SQLite DB + PHP API + SMS notifications + Web dashboard</p>
       </div>
       <div class="spec-card">
         <i class="fas fa-mobile-alt"></i>
-        <h3>Mobile</h3>
-        <p>Progressive Web App + SMS fallback + Offline capable</p>
+        <h3 data-lang="specs.mobile">Mobile</h3>
+        <p data-lang="specs.mobile.val">Responsive PWA + SMS fallback + Offline sync</p>
       </div>
+
     </div>
   </section>
 
-  <div class="cta-section">
-    <h2 class="section-title">Ready to Save Water?</h2>
-    <a href="login.html" class="btn">Login to Dashboard</a>
-  </div>
+  <!-- CTA Section - Hidden when logged in -->
+  <section class="cta-section" id="ctaSection">
+    <h2 data-lang="cta.title">Ready to Save Water?</h2>
+    <p data-lang="cta.desc">Join farmers using smart irrigation. Set up in 30 minutes, see results immediately.</p>
+    <a href="register.html" class="btn btn-large" data-lang="cta.button">Get Started Free</a>
+  </section>
 
   <footer>
     <div class="footer-links">
-      <a href="index.html">Home</a>
-      <a href="about.html">About</a>
-      <a href="problem.html">Problem</a>
-      <a href="features.html">Features</a>
-      <a href="how.html">How It Works</a>
-      <a href="tech.html">Tech</a>
-      <a href="research.html">Research</a>
-      <a href="demo.html">Demo</a>
-      <a href="contact.html">Contact</a>
-      <a href="login.html">Login</a>
-      <a href="register.html">Register</a>
+      <a href="index.html" data-lang="nav.home">Home</a>
+      <a href="features.html" data-lang="nav.features">Features</a>
+      <a href="how.html" data-lang="nav.how">How It Works</a>
+      <a href="dashboard.html" data-lang="nav.dashboard">Dashboard</a>
+      <a href="contact.html" data-lang="nav.contact">Contact</a>
+      <a href="login.html" data-lang="nav.login">Login</a>
     </div>
-    <p>&copy; 2026 Lewis Ondigi Abuga | The Cooperative University of Kenya</p>
+    <p data-lang="footer.copyright">&copy; 2026 Lewis Ondigi Abuga | The Cooperative University of Kenya</p>
   </footer>
 
   <script src="script.js"></script>
+  <script>
+    // API Base URL
+    const apiBase = window.apiBase || 'http://aquasense.local/php/api';
+    
+    // Load live data for logged-in users
+    async function loadFeaturesData() {
+      const auth = getAuthData ? getAuthData() : null;
+      if (!auth?.loggedIn || !auth.farms || auth.farms.length === 0) {
+        // Not logged in - show locked messages
+        showLockedMessages();
+        return;
+      }
+      
+      // User is logged in - fetch live data
+      const farmId = auth.farms[0].farmId;
+      
+      try {
+        // Fetch latest sensor reading
+        const readingResponse = await fetch(`${apiBase}/data/farms/${farmId}/latest-reading`, {
+          headers: { 'Authorization': `Bearer ${auth.token}` }
+        });
+        
+        if (readingResponse.ok) {
+          const reading = await readingResponse.json();
+          updateMoistureStatus(reading);
+          updateSolarStatus(reading);
+        }
+        
+        // Fetch irrigation status
+        const irrigationResponse = await fetch(`${apiBase}/irrigation/farms/${farmId}/auto-mode`, {
+          headers: { 'Authorization': `Bearer ${auth.token}` }
+        });
+        
+        if (irrigationResponse.ok) {
+          const irrigation = await irrigationResponse.json();
+          updateIrrigationStatus(irrigation);
+        }
+        
+        // Fetch alerts count
+        const alertsResponse = await fetch(`${apiBase}/data/farms/${farmId}/alerts`, {
+          headers: { 'Authorization': `Bearer ${auth.token}` }
+        });
+        
+        if (alertsResponse.ok) {
+          const alerts = await alertsResponse.json();
+          updateSMSStatus(alerts);
+        }
+        
+        // Update dashboard status
+        updateDashboardStatus(auth);
+        updateAnalyticsStatus(auth);
+        
+      } catch (error) {
+        console.error('Error loading features data:', error);
+      }
+    }
+    
+    function updateMoistureStatus(reading) {
+      const statusEl = document.getElementById('moistureStatus');
+      if (!statusEl) return;
+      
+      const moisture = reading.soilMoisture || 0;
+      const status = moisture < 35 ? 'low' : moisture < 70 ? 'optimal' : 'high';
+      const colors = { low: '#e74c3c', optimal: '#2ecc71', high: '#3498db' };
+      const lang = localStorage.getItem('lang') || 'en';
+      
+      const labels = {
+        en: { current: 'Current Moisture', viewChart: 'View Chart' },
+        sw: { current: 'Unyevu wa Sasa', viewChart: 'Angalia Grafu' }
+      };
+      
+      statusEl.innerHTML = `
+        <div class="feature-live-data">
+          <div class="live-value" style="color: ${colors[status]}">
+            <span class="value">${moisture}%</span>
+            <span class="label">${labels[lang].current}</span>
+          </div>
+          <a href="dashboard.html" class="btn btn-small">
+            <i class="fas fa-chart-line"></i> ${labels[lang].viewChart}
+          </a>
+        </div>
+      `;
+    }
+    
+    function updateIrrigationStatus(irrigation) {
+      const statusEl = document.getElementById('irrigationStatus');
+      if (!statusEl) return;
+      
+      const autoEnabled = irrigation.enabled;
+      const lang = localStorage.getItem('lang') || 'en';
+      
+      const labels = {
+        en: { 
+          active: 'Auto Enabled', 
+          inactive: 'Auto Disabled',
+          control: 'Control Irrigation'
+        },
+        sw: { 
+          active: 'Kiotomatiki Imewashwa', 
+          inactive: 'Kiotomatiki Imezimwa',
+          control: 'Dhibiti Umwagiliaji'
+        }
+      };
+      
+      statusEl.innerHTML = `
+        <div class="feature-live-data">
+          <div class="live-value">
+            <span class="status-badge ${autoEnabled ? 'active' : 'inactive'}">
+              <i class="fas fa-${autoEnabled ? 'check' : 'times'}"></i>
+              ${autoEnabled ? labels[lang].active : labels[lang].inactive}
+            </span>
+          </div>
+          <a href="dashboard.html#irrigation" class="btn btn-small">
+            <i class="fas fa-cog"></i> ${labels[lang].control}
+          </a>
+        </div>
+      `;
+    }
+    
+    function updateSolarStatus(reading) {
+      const statusEl = document.getElementById('solarStatus');
+      if (!statusEl) return;
+      
+      const battery = reading.batteryLevel || 0;
+      const solar = reading.solarLevel || 0;
+      const lang = localStorage.getItem('lang') || 'en';
+      
+      const labels = {
+        en: { battery: 'Battery', solar: 'Solar', viewPower: 'View Power' },
+        sw: { battery: 'Betri', solar: 'Sola', viewPower: 'Angalia Nguvu' }
+      };
+      
+      statusEl.innerHTML = `
+        <div class="feature-live-data">
+          <div class="live-values">
+            <div class="live-value">
+              <span class="value">${battery}%</span>
+              <span class="label">${labels[lang].battery}</span>
+            </div>
+            <div class="live-value">
+              <span class="value">${solar}%</span>
+              <span class="label">${labels[lang].solar}</span>
+            </div>
+          </div>
+          <a href="dashboard.html" class="btn btn-small">
+            <i class="fas fa-battery-full"></i> ${labels[lang].viewPower}
+          </a>
+        </div>
+      `;
+    }
+    
+    function updateSMSStatus(alerts) {
+      const statusEl = document.getElementById('smsStatus');
+      if (!statusEl) return;
+      
+      const unreadCount = Array.isArray(alerts) ? alerts.filter(a => !a.acknowledged).length : 0;
+      const lang = localStorage.getItem('lang') || 'en';
+      
+      const labels = {
+        en: { 
+          newAlerts: unreadCount > 0 ? `${unreadCount} New Alerts` : 'No New Alerts',
+          viewAlerts: 'View Alerts'
+        },
+        sw: { 
+          newAlerts: unreadCount > 0 ? `Arifa ${unreadCount} Mpya` : 'Hakuna Arifa Mpya',
+          viewAlerts: 'Tazama Arifa'
+        }
+      };
+      
+      statusEl.innerHTML = `
+        <div class="feature-live-data">
+          <div class="live-value">
+            <span class="status-badge ${unreadCount > 0 ? 'alert' : 'ok'}">
+              <i class="fas fa-bell"></i>
+              ${labels[lang].newAlerts}
+            </span>
+          </div>
+          <a href="dashboard.html#alerts" class="btn btn-small">
+            <i class="fas fa-envelope"></i> ${labels[lang].viewAlerts}
+          </a>
+        </div>
+      `;
+    }
+    
+    function updateDashboardStatus(auth) {
+      const dashboardLink = document.getElementById('dashboardLink');
+      const dashboardNote = document.getElementById('dashboardNote');
+      const lang = localStorage.getItem('lang') || 'en';
+      
+      const labels = {
+        en: { open: 'Open Dashboard', farms: (n) => `You have ${n} farms. Click to view data and control irrigation.` },
+        sw: { open: 'Fungua Dashibodi', farms: (n) => `Una shamba ${n}. Bonyeza ili kuona data na kudhibiti umwagiliaji.` }
+      };
+      
+      if (dashboardLink) {
+        dashboardLink.href = 'dashboard.html';
+        dashboardLink.innerHTML = `<i class="fas fa-external-link-alt"></i> ${labels[lang].open}`;
+        dashboardLink.classList.remove('login-required');
+      }
+      
+      if (dashboardNote) {
+        const farmCount = auth.farms?.length || 0;
+        dashboardNote.textContent = labels[lang].farms(farmCount);
+      }
+    }
+    
+    function updateAnalyticsStatus(auth) {
+      const statusEl = document.getElementById('analyticsStatus');
+      if (!statusEl) return;
+      
+      const farmCount = auth.farms?.length || 0;
+      const lang = localStorage.getItem('lang') || 'en';
+      
+      const labels = {
+        en: { yourFarms: 'Your Farms', viewReports: 'View Reports' },
+        sw: { yourFarms: 'Shamba Zako', viewReports: 'Angalia Ripoti' }
+      };
+      
+      statusEl.innerHTML = `
+        <div class="feature-live-data">
+          <div class="live-value">
+            <span class="value">${farmCount}</span>
+            <span class="label">${labels[lang].yourFarms}</span>
+          </div>
+          <a href="dashboard.html#analytics" class="btn btn-small">
+            <i class="fas fa-chart-bar"></i> ${labels[lang].viewReports}
+          </a>
+        </div>
+      `;
+    }
+    
+    function showLockedMessages() {
+      const lang = localStorage.getItem('lang') || 'en';
+      
+      const labels = {
+        en: {
+          signIn: 'Sign In',
+          toView: 'Sign in to view data',
+          moisture: 'Sign in to view moisture levels',
+          irrigation: 'Sign in to configure irrigation',
+          dashboard: 'Login to Access Dashboard',
+          dashboardNote: 'View live farm data, control irrigation, and monitor sensors after logging in.',
+          sms: 'Sign in to configure SMS alerts',
+          solar: 'Sign in to monitor power levels',
+          analytics: 'Sign in to view analytics'
+        },
+        sw: {
+          signIn: 'Ingia',
+          toView: 'Ingia kuona data',
+          moisture: 'Ingia kuona viwango vya unyevu',
+          irrigation: 'Ingia kusanidi umwagiliaji',
+          dashboard: 'Ingia Kufikia Dashibodi',
+          dashboardNote: 'Tazama data ya shamba, simamia umwagiliaji, na fuatilia sensa baada ya kuingia.',
+          sms: 'Ingia kusanidi arifa za SMS',
+          solar: 'Ingia kufuatilia viwango vya nguvu',
+          analytics: 'Ingia kuona analytics'
+        }
+      };
+      
+      // Update dashboard status
+      const dashboardLink = document.getElementById('dashboardLink');
+      const dashboardNote = document.getElementById('dashboardNote');
+      
+      if (dashboardLink) {
+        dashboardLink.href = 'login.html';
+        dashboardLink.innerHTML = `<i class="fas fa-lock"></i> ${labels[lang].dashboard}`;
+        dashboardLink.classList.add('login-required');
+      }
+      if (dashboardNote) {
+        dashboardNote.textContent = labels[lang].dashboardNote;
+      }
+      
+      // Show sign-in prompts for other features
+      const signInHtml = `
+        <div class="feature-info-box">
+          <i class="fas fa-lock"></i>
+          <p>${labels[lang].signIn}</p>
+          <a href="login.html" class="btn btn-small" style="margin-top: 10px;">
+            <i class="fas fa-sign-in-alt"></i> ${labels[lang].signIn}
+          </a>
+        </div>
+      `;
+      
+      const statusElements = ['moistureStatus', 'irrigationStatus', 'smsStatus', 'solarStatus', 'analyticsStatus'];
+      statusElements.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+          el.innerHTML = signInHtml.replace('${labels[lang].signIn}', labels[lang][id.replace('Status', '')] || labels[lang].toView);
+        }
+      });
+    }
+    
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', function() {
+      // Check auth and hide CTA if logged in
+      const auth = getAuthData ? getAuthData() : null;
+      const ctaSection = document.getElementById('ctaSection');
+      if (auth?.loggedIn && ctaSection) {
+        ctaSection.style.display = 'none';
+      }
+      loadFeaturesData();
+    });
+  </script>
 </body>
 </html>

@@ -15,19 +15,18 @@
         <i class="fas fa-seedling"></i> AquaSense
       </a>
       <ul class="nav-links">
-        <li><a href="index.html">Home</a></li>
-        <li><a href="about.html">About</a></li>
-        <li><a href="problem.html">Problem</a></li>
-        <li><a href="features.html">Features</a></li>
-        <li><a href="how.html">How It Works</a></li>
-        <li><a href="tech.html">Tech</a></li>
-        <li><a href="research.html">Research</a></li>
-        <li><a href="demo.html">Demo</a></li>
-        <li><a href="contact.html">Contact</a></li>
-        <li><a href="login.html" class="active">Login</a></li>
-        <li><a href="register.html">Register</a></li>
+        <li><a href="index.html" data-lang="nav.home">Home</a></li>
+        <li><a href="features.html" data-lang="nav.features">Features</a></li>
+        <li><a href="how.html" data-lang="nav.how">How It Works</a></li>
+        <li><a href="dashboard.html" data-lang="nav.dashboard">Dashboard</a></li>
+        <li><a href="login.html" class="active" data-lang="nav.login">Login</a></li>
+        <li><a href="register.html" data-lang="nav.register">Register</a></li>
       </ul>
       <div class="auth-nav">
+        <button class="lang-toggle" id="langToggle" onclick="toggleLanguage()">
+          <i class="fas fa-globe"></i>
+          <span id="langText">EN</span>
+        </button>
         <a href="login.html" class="login-icon" title="Login">
           <i class="fas fa-user-circle"></i>
         </a>
@@ -45,45 +44,42 @@
       <div class="login-card">
         <div class="login-header">
           <i class="fas fa-seedling login-icon-large"></i>
-          <h1>Welcome Back</h1>
-          <p>Access your AquaSense dashboard</p>
+          <h1 data-lang="login.welcome">Welcome Back</h1>
+          <p data-lang="login.subtitle">Access your AquaSense dashboard</p>
         </div>
 
         <form id="loginForm" class="login-form">
           <div class="form-group">
             <div class="input-group">
               <i class="fas fa-envelope input-icon"></i>
-              <input type="email" id="email" placeholder="Email" required>
+              <input type="email" id="email" data-lang-placeholder="login.email" placeholder="Email" required>
             </div>
           </div>
           <div class="form-group">
-            <div class="input-group">
-              <i class="fas fa-lock input-icon"></i>
-              <input type="password" id="password" placeholder="Password" required>
+            <div class="input-group" style="position:relative;">
+              <i class="fas fa-lock input-icon" style="left:12px;"></i>
+              <input type="password" id="password" data-lang-placeholder="login.password" placeholder="Password" required pattern="[a-zA-Z0-9]+" title="Password must contain only letters and numbers" style="padding-left:40px;padding-right:40px;">
+              <i class="fas fa-eye toggle-password" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);cursor:pointer;color:#999;" onclick="let input=this.previousElementSibling; input.type=input.type==='password'?'text':'password'; this.classList.toggle('fa-eye-slash');"></i>
             </div>
           </div>
           <div class="form-options">
             <label class="checkbox-container">
               <input type="checkbox" id="remember">
               <span class="checkmark"></span>
-              Remember me
+              <span data-lang="login.remember">Remember me</span>
             </label>
-            <a href="#" class="forgot-pw">Forgot Password?</a>
+            <a href="#" class="forgot-pw" data-lang="login.forgot">Forgot Password?</a>
           </div>
           <button type="submit" class="btn login-btn">
-            <span id="loginText">Sign In</span>
+            <span id="loginText" data-lang="login.signin">Sign In</span>
             <div class="spinner" id="loginSpinner" style="display:none;"></div>
           </button>
         </form>
 
-        <div class="demo-users">
-          <p><strong>Demo Accounts:</strong></p>
-          <p>admin@example.com / password123</p>
-          <p>farmer@kenya.com / irrigate2024</p>
-        </div>
+
 
         <div class="login-footer">
-          <p>Don't have an account? <a href="register.html">Sign up</a></p>
+          <p><span data-lang="login.noaccount">Don't have an account?</span> <a href="register.html" data-lang="login.signup">Sign up</a></p>
         </div>
       </div>
     </div>
@@ -91,18 +87,14 @@
 
   <footer>
     <div class="footer-links">
-      <a href="index.html">Home</a>
-      <a href="about.html">About</a>
-      <a href="problem.html">Problem</a>
-      <a href="features.html">Features</a>
-      <a href="how.html">How It Works</a>
-      <a href="tech.html">Tech</a>
-      <a href="research.html">Research</a>
-      <a href="demo.html">Demo</a>
-      <a href="contact.html">Contact</a>
-      <a href="register.html">Register</a>
+      <a href="index.html" data-lang="nav.home">Home</a>
+      <a href="features.html" data-lang="nav.features">Features</a>
+      <a href="how.html" data-lang="nav.how">How It Works</a>
+      <a href="dashboard.html" data-lang="nav.dashboard">Dashboard</a>
+      <a href="contact.html" data-lang="nav.contact">Contact</a>
+      <a href="register.html" data-lang="nav.register">Register</a>
     </div>
-    <p>&copy; 2026 Lewis Ondigi Abuga | The Cooperative University of Kenya</p>
+    <p data-lang="footer.copyright">&copy; 2026 Lewis Ondigi Abuga | The Cooperative University of Kenya</p>
   </footer>
 
   <script src="script.js"></script>
