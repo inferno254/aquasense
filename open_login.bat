@@ -1,0 +1,3 @@
+@echo off
+echo Opening AquaSense Login Page...
+start http://localhost/aquasense/login.html

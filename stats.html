@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Impact Stats - AquaSense</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="index.html" class="logo">
+        <i class="fas fa-seedling"></i> AquaSense
+      </a>
+      <ul class="nav-links">
+        <li><a href="dashboard.html">Dashboard</a></li>
+        <li><a href="farm.html">Farms</a></li>
+        <li><a href="stats.html" class="active">Stats</a></li>
+        <li><a href="login.html">Login</a></li>
+      </ul>
+      <div class="auth-nav">
+        <button class="dark-mode-toggle" id="darkModeToggle" onclick="toggleDarkMode()" title="Toggle Dark Mode">
+          <i class="fas fa-moon" id="darkModeIcon"></i>
+        </button>
+        <a href="login.html" class="login-icon" title="Sign In">
+          <i class="fas fa-user-circle"></i>
+        </a>
+      </div>
+      <div class="hamburger">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </nav>
+  </header>
+
+  <div class="dashboard">
+    <div class="dashboard-header">
+      <h1>Live Impact Statistics</h1>
+      <p>Real-time AquaSense performance across all farms</p>
+    </div>
+
+    <div class="stats-grid stats-impact">
+      <div class="stat-card water-saved">
+        <i class="fas fa-tint-drop"></i>
+        <span class="stat-number" data-stat="waterSaved" data-target="12750">0</span>
+        <p>Liters Saved</p>
+      </div>
+      <div class="stat-card efficiency">
+        <i class="fas fa-chart-line"></i>
+        <span class="stat-number" data-stat="efficiency" data-target="94">0</span>
+        <p>Water Efficiency</p>
+        <small>%</small>
+      </div>
+      <div class="stat-card events">
+        <i class="fas fa-seedling"></i>
+        <span class="stat-number" data-stat="events" data-target="42">0</span>
+        <p>Irrigation Events</p>
+      </div>
+      <div class="stat-card alerts">
+        <i class="fas fa-bell"></i>
+        <span class="stat-number" data-stat="alerts" data-target="8">0</span>
+        <p>Alerts Sent</p>
+      </div>
+      <div class="stat-card farms">
+        <i class="fas fa-tractor"></i>
+        <span class="stat-number" data-stat="farms" data-target="5">0</span>
+        <p>Active Farms</p>
+      </div>
+      <div class="stat-card uptime">
+        <i class="fas fa-bolt"></i>
+        <span class="stat-number" data-stat="uptime" data-target="99.8">0</span>
+        <p>Uptime</p>
+        <small>%</small>
+      </div>
+    </div>
+
+    <div class="charts-row">
+      <div class="chart-container">
+        <h3>Water Usage Trend</h3>
+        <canvas id="waterChart"></canvas>
+      </div>
+      <div class="chart-container">
+        <h3>Moisture vs Events</h3>
+        <canvas id="moistureChart"></canvas>
+      </div>
+    </div>
+
+    <div class="farm-performance">
+      <h3>Farm Performance Ranking</h3>
+      <div id="farmRanking">
+        <!-- Dynamic -->
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+  <script>
+    const auth = getAuthData();
+    if (!auth?.loggedIn) window.location.href = 'login.html';
+
+    let waterChart, moistureChart;
+
+    async function loadStats() {
+      try {
+        const stats = await requestJson('/api/data/stats'); // Add endpoint later
+        updateLiveStats(stats);
+        updateCharts(stats);
+        updateRanking(stats.farms);
+      } catch (e) {
+        useDemoStats();
+      }
+    }
+
+    function updateLiveStats(data) {
+      const stats = document.querySelectorAll('[data-stat]');
+      stats.forEach(stat => {
+        const key = stat.dataset.stat;
+        const target = data[key] ?? parseFloat(stat.dataset.target);
+        animateCounter(stat, target);
+      });
+    }
+
+    function animateCounter(element, target) {
+      let current = 0;
+      const duration = 2000;
+      const increment = target / (duration / 16);
+      const timer = setInterval(() => {
+        current += increment;
+        if (current >= target) {
+          element.textContent = formatNumber(target);
+          clearInterval(timer);
+        } else {
+          element.textContent = formatNumber(current);
+        }
+      }, 16);
+    }
+
+    function formatNumber(num) {
+      return num.toLocaleString(undefined, {maximumFractionDigits: 1});
+    }
+
+    function updateCharts(data) {
+      // Water trend
+      const waterCtx = document.getElementById('waterChart')?.getContext('2d');
+      if (waterCtx) {
+        if (waterChart) waterChart.destroy();
+        waterChart = new Chart(waterCtx, {
+          type: 'line',
+          data: {
+            labels: data.waterHours || ['12am','3am','6am','9am','12pm','3pm','6pm','9pm'],
+            datasets: [{
+              label: 'Liters Used',
+              data: data.waterData || [120, 150, 100, 180, 220, 190, 140, 110],
+              borderColor: '#4CAF50',
+              fill: true
+            }]
+          },
+          options: { responsive: true, scales: { y: { beginAtZero: true } } }
+        });
+      }
+
+      // Moisture
+      const moistureCtx = document.getElementById('moistureChart')?.getContext('2d');
+      if (moistureCtx) {
+        if (moistureChart) moistureChart.destroy();
+        moistureChart = new Chart(moistureCtx, {
+          type: 'scatter',
+          data: {
+            datasets: [{
+              label: 'Moisture vs Events',
+              data: data.eventData || [{x: 28, y: 3}, {x: 45, y: 1}, {x: 32, y: 2}, {x: 60, y: 0}],
+              backgroundColor: '#2196F3'
+            }]
+          },
+          options: { responsive: true, scales: { x: { title: { display: true, text: 'Moisture %' } }, y: { title: { display: true, text: 'Events Today' }, beginAtZero: true } } }
+        });
+      }
+    }
+
+    function updateRanking(farmsData) {
+      const container = document.getElementById('farmRanking');
+      const farms = farmsData.farmList || farmsData.farms;
+      if (!farms?.length) return container.innerHTML = '<p>No farm data available</p>';
+      
+      const ranked = farms.sort((a, b) => (b.efficiency || 0) - (a.efficiency || 0));
+      container.innerHTML = ranked.map((farm, i) => `
+        <div class="rank-item">
+          <span class="rank">${i+1}</span>
+          <div>
+            <strong>${farm.location}</strong> (${farm.cropType})
+            <div>${(farm.efficiency || 0).toFixed(1)}% efficient | ${(farm.litersSaved || 0).toLocaleString()}L saved</div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function useDemoStats() {
+      const demo = {
+        waterSaved: 12750,
+        efficiency: 94.2,
+        events: 42,
+        alerts: 8,
+        farms: 5,
+        uptime: 99.8,
+        waterData: [120, 150, 100, 180, 220, 190, 140, 110],
+        farms: [
+          { location: 'Kiambu Farm', cropType: 'Maize', efficiency: 96.1, litersSaved: 4500 },
+          { location: 'Nakuru Field', cropType: 'Tomatoes', efficiency: 93.4, litersSaved: 3800 },
+          { location: 'Machakos', cropType: 'Beans', efficiency: 91.8, litersSaved: 2850 },
+          { location: 'Thika Farm', cropType: 'Cabbage', efficiency: 95.2, litersSaved: 1600 }
+        ]
+      };
+      updateLiveStats(demo);
+      updateCharts(demo);
+      updateRanking(demo.farms);
+    }
+
+    // Load on start + refresh every 30s
+    loadStats();
+    setInterval(loadStats, 30000);
+  </script>
+  <style>
+    .stats-impact { grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; }
+    .stat-card { text-align: center; padding: 2rem; }
+    .stat-card i { font-size: 3rem; margin-bottom: 1rem; }
+    .stat-number { font-size: 3.5rem; font-weight: 700; display: block; }
+    .charts-row { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin: 3rem 0; }
+    .chart-container { background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
+    .rank-item { display: flex; align-items: center; padding: 1rem; border-bottom: 1px solid #eee; }
+    .rank { font-size: 2rem; font-weight: 700; color: #4CAF50; margin-right: 1rem; width: 40px; }
+  </style>
+</body>
+</html>
+

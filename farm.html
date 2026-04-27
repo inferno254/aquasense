@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Farms - AquaSense</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="index.html" class="logo">
+        <i class="fas fa-seedling"></i> AquaSense
+      </a>
+      <ul class="nav-links">
+        <li><a href="dashboard.html">Dashboard</a></li>
+        <li><a href="farm.html" class="active">Farms</a></li>
+        <li><a href="login.html">Login</a></li>
+      </ul>
+      <div class="auth-nav">
+        <button class="dark-mode-toggle" id="darkModeToggle" onclick="toggleDarkMode()" title="Toggle Dark Mode">
+          <i class="fas fa-moon" id="darkModeIcon"></i>
+        </button>
+        <a href="login.html" class="login-icon" title="Sign In">
+          <i class="fas fa-user-circle"></i>
+        </a>
+      </div>
+      <div class="hamburger">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </nav>
+  </header>
+
+  <div class="dashboard">
+    <div class="dashboard-header">
+      <h1>My Farms</h1>
+      <p>Manage your farms and irrigation settings</p>
+      <button id="addFarmBtn" class="btn">+ Add Farm</button>
+    </div>
+
+    <div class="farm-list" id="farmList">
+      <!-- Dynamic farms from /api/data/farms -->
+    </div>
+
+    <div id="farmFormModal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2 id="formTitle">Add Farm</h2>
+        <form id="farmForm">
+          <input type="hidden" id="farmId">
+          <div class="form-group">
+            <label>Location/GPS</label>
+            <input type="text" id="location" placeholder="e.g. Kiambu Farm, GPS -1.234,36.789" required>
+          </div>
+          <div class="form-group">
+            <label>Size (hectares)</label>
+            <input type="number" id="size" step="0.1" min="0.1" max="100" required>
+          </div>
+          <div class="form-group">
+            <label>Crop Type</label>
+            <select id="cropType" required>
+              <option value="Maize">Maize</option>
+              <option value="Tomatoes">Tomatoes</option>
+              <option value="Beans">Beans</option>
+              <option value="Cabbage">Cabbage</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Moisture Threshold (%)</label>
+            <input type="number" id="threshold" step="1" min="20" max="50" value="35" required>
+          </div>
+          <button type="submit" class="btn">Save Farm</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+  <script>
+    const auth = getAuthData();
+    if (!auth?.loggedIn) window.location.href = 'login.html';
+
+    async function loadFarms() {
+      try {
+        const farms = await requestJson('/api/data/farms');
+        const list = document.getElementById('farmList');
+        list.innerHTML = farms.map(farm => `
+          <div class="farm-card">
+            <h3>${farm.location || farm.Location}</h3>
+            <p>Crop: ${farm.cropType || farm.CropType} | Size: ${farm.size || farm.Size} ha</p>
+            <p>Status: ${farm.status} | Sensors: ${farm.sensorCount}</p>
+            <div class="farm-actions">
+              <button onclick="editFarm('${farm.farmId || farm.FarmId}')">Edit</button>
+              <a href="demo.html?farmId=${farm.farmId || farm.FarmId}">View Dashboard</a>
+            </div>
+          </div>
+        `).join('');
+      } catch (e) {
+        document.getElementById('farmList').innerHTML = '<p>No farms yet. Add your first farm!</p>';
+      }
+    }
+
+    document.getElementById('addFarmBtn').onclick = () => showForm();
+    document.querySelector('.close').onclick = hideForm;
+    document.getElementById('farmForm').onsubmit = handleFarmSubmit;
+
+    async function handleFarmSubmit(e) {
+      e.preventDefault();
+      const id = document.getElementById('farmId').value;
+      const data = {
+        location: document.getElementById('location').value,
+        size: parseFloat(document.getElementById('size').value),
+        cropType: document.getElementById('cropType').value,
+        moistureThreshold: parseInt(document.getElementById('threshold').value)
+      };
+      try {
+        const url = id ? `/api/farms/${id}` : '/api/farms';
+        const method = id ? 'PUT' : 'POST';
+        await requestJson(url, {method, body: JSON.stringify(data)});
+        hideForm();
+        loadFarms();
+      } catch (e) {
+        alert('Error saving farm');
+      }
+    }
+
+    function showForm(id) {
+      document.getElementById('farmFormModal').style.display = 'block';
+      if (id) {
+        // Load existing (placeholder for GET /api/farms/{id})
+        document.getElementById('formTitle').textContent = 'Edit Farm';
+        document.getElementById('farmId').value = id;
+      } else {
+        document.getElementById('formTitle').textContent = 'Add Farm';
+        document.getElementById('farmId').value = '';
+      }
+    }
+
+    function hideForm() {
+      document.getElementById('farmFormModal').style.display = 'none';
+      document.getElementById('farmForm').reset();
+    }
+
+    window.onclick = (e) => {
+      if (e.target.classList.contains('modal')) hideForm();
+    };
+
+    loadFarms();
+  </script>
+  <style>
+    .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); }
+    .modal-content { background: white; margin: 15% auto; padding: 2rem; border-radius: 8px; width: 90%; max-width: 500px; }
+    .close { color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer; }
+    .farm-card { background: white; padding: 1.5rem; border-radius: 8px; margin-bottom: 1rem; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+    .farm-actions button, .farm-actions a { margin-right: 1rem; padding: 0.5rem 1rem; }
+  </style>
+</body>
+</html>

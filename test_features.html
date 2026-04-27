@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Features - AquaSense</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <h1>Features Demo Test</h1>
+    <button class="dark-mode-toggle" id="darkModeToggle" onclick="toggleDarkMode()" title="Toggle Dark Mode">
+        <i class="fas fa-moon" id="darkModeIcon"></i>
+    </button>
+    <div id="test-results"></div>
+    
+    <h2>Testing Interactive Functions</h2>
+    <button onclick="testDemoFunctions()">Run All Tests</button>
+    
+    <script>
+        let testResults = [];
+        
+        function logResult(test, passed, message) {
+            testResults.push({
+                test: test,
+                passed: passed,
+                message: message,
+                time: new Date().toLocaleTimeString()
+            });
+            updateResults();
+        }
+        
+        function updateResults() {
+            const resultsDiv = document.getElementById('test-results');
+            resultsDiv.innerHTML = testResults.map(result => 
+                `<div style="padding: 10px; margin: 5px 0; border-left: 4px solid ${result.passed ? '#4CAF50' : '#F44336'}; background: ${result.passed ? '#e8f5e8' : '#ffebee'};">
+                    <strong>${result.test}:</strong> ${result.passed ? '✅ PASS' : '❌ FAIL'}
+                    <br><small>${result.message}</small>
+                    <br><small>Time: ${result.time}</small>
+                </div>`
+            ).join('');
+        }
+        
+        async function testDemoFunctions() {
+            console.log('Starting feature demo tests...');
+            
+            // Test 1: Sensor data simulation
+            try {
+                if (typeof simulateDrySoil === 'function') {
+                    logResult('Sensor Functions', true, 'simulateDrySoil() function exists');
+                } else {
+                    logResult('Sensor Functions', false, 'simulateDrySoil() function missing');
+                }
+                
+                if (typeof updateSensorDisplay === 'function') {
+                    logResult('Sensor Display', true, 'updateSensorDisplay() function exists');
+                } else {
+                    logResult('Sensor Display', false, 'updateSensorDisplay() function missing');
+                }
+                
+            } catch (error) {
+                logResult('Sensor Tests', false, 'Error testing sensor functions: ' + error.message);
+            }
+            
+            // Test 2: Auto irrigation controls
+            try {
+                if (typeof toggleAutoMode === 'function') {
+                    logResult('Auto Controls', true, 'toggleAutoMode() function exists');
+                } else {
+                    logResult('Auto Controls', false, 'toggleAutoMode() function missing');
+                }
+                
+                if (typeof manualIrrigate === 'function') {
+                    logResult('Manual Controls', true, 'manualIrrigate() function exists');
+                } else {
+                    logResult('Manual Controls', false, 'manualIrrigate() function missing');
+                }
+                
+            } catch (error) {
+                logResult('Auto Control Tests', false, 'Error testing auto controls: ' + error.message);
+            }
+            
+            // Test 3: SMS functionality
+            try {
+                if (typeof sendTestSMS === 'function') {
+                    logResult('SMS Functions', true, 'sendTestSMS() function exists');
+                } else {
+                    logResult('SMS Functions', false, 'sendTestSMS() function missing');
+                }
+                
+                if (typeof toggleSMS === 'function') {
+                    logResult('SMS Toggle', true, 'toggleSMS() function exists');
+                } else {
+                    logResult('SMS Toggle', false, 'toggleSMS() function missing');
+                }
+                
+            } catch (error) {
+                logResult('SMS Tests', false, 'Error testing SMS functions: ' + error.message);
+            }
+            
+            // Test 4: Solar system simulation
+            try {
+                if (typeof simulateSunnyDay === 'function') {
+                    logResult('Solar Functions', true, 'simulateSunnyDay() function exists');
+                } else {
+                    logResult('Solar Functions', false, 'simulateSunnyDay() function missing');
+                }
+                
+                if (typeof updateSolarDisplay === 'function') {
+                    logResult('Solar Display', true, 'updateSolarDisplay() function exists');
+                } else {
+                    logResult('Solar Display', false, 'updateSolarDisplay() function missing');
+                }
+                
+            } catch (error) {
+                logResult('Solar Tests', false, 'Error testing solar functions: ' + error.message);
+            }
+            
+            // Test 5: Analytics functionality
+            try {
+                if (typeof generateReport === 'function') {
+                    logResult('Analytics Functions', true, 'generateReport() function exists');
+                } else {
+                    logResult('Analytics Functions', false, 'generateReport() function missing');
+                }
+                
+                if (typeof exportData === 'function') {
+                    logResult('Data Export', true, 'exportData() function exists');
+                } else {
+                    logResult('Data Export', false, 'exportData() function missing');
+                }
+                
+            } catch (error) {
+                logResult('Analytics Tests', false, 'Error testing analytics functions: ' + error.message);
+            }
+            
+            // Test 6: Alert system
+            try {
+                if (typeof showAlert === 'function') {
+                    logResult('Alert System', true, 'showAlert() function exists');
+                } else {
+                    logResult('Alert System', false, 'showAlert() function missing');
+                }
+                
+            } catch (error) {
+                logResult('Alert Tests', false, 'Error testing alert system: ' + error.message);
+            }
+            
+            console.log('Feature demo tests completed.');
+        }
+    </script>
+    
+    <!-- Load the main script -->
+    <script src="script.js"></script>
+</body>
+</html>
