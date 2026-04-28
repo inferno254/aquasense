@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="style.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
   <header>
@@ -26,6 +27,9 @@
         <button class="lang-toggle" id="langToggle" onclick="toggleLanguage()">
           <i class="fas fa-globe"></i>
           <span id="langText">EN</span>
+        </button>
+        <button class="dark-mode-toggle" id="darkModeToggle" onclick="toggleDarkMode()" title="Toggle Dark Mode">
+          <i class="fas fa-moon" id="darkModeIcon"></i>
         </button>
         <a href="login.html" class="login-icon" title="Sign In">
           <i class="fas fa-user-circle"></i>
@@ -50,6 +54,7 @@
     <h2 class="section-title" data-lang="features.title">Core Features</h2>
     <div class="feature-grid">
 
+      <!-- 1. Soil Moisture Sensors -->
       <div class="feature-card">
         <i class="fas fa-tint feature-icon"></i>
         <h3 data-lang="features.moisture">Soil Moisture Sensors</h3>
@@ -59,11 +64,12 @@
           <li data-lang="features.moisture.interval">15min intervals</li>
           <li data-lang="features.moisture.depth">Multi-depth sensing</li>
         </ul>
-        <div class="feature-status" id="moistureStatus">
-          <!-- Dynamic content for logged-in users -->
+        <div class="feature-live-panel" id="moisturePanel">
+          <div id="moistureStatus"></div>
         </div>
       </div>
 
+      <!-- 2. Auto Irrigation -->
       <div class="feature-card">
         <i class="fas fa-magic feature-icon"></i>
         <h3 data-lang="features.auto">Auto Irrigation</h3>
@@ -73,11 +79,12 @@
           <li data-lang="features.auto.zone">Multi-zone control</li>
           <li data-lang="features.auto.pump">Pump protection</li>
         </ul>
-        <div class="feature-status" id="irrigationStatus">
-          <!-- Dynamic content for logged-in users -->
+        <div class="feature-live-panel" id="irrigationPanel">
+          <div id="irrigationStatus"></div>
         </div>
       </div>
 
+      <!-- 3. Web Dashboard -->
       <div class="feature-card">
         <i class="fas fa-chart-line feature-icon"></i>
         <h3 data-lang="features.dashboard">Web Dashboard</h3>
@@ -87,14 +94,17 @@
           <li data-lang="features.dashboard.history">Historical trends</li>
           <li data-lang="features.dashboard.manual">Manual override</li>
         </ul>
-        <div class="feature-status" id="dashboardStatus">
-          <a href="login.html" class="dashboard-link" id="dashboardLink">
-            <i class="fas fa-lock"></i> <span data-lang="features.dashboard.login">Login to Access Dashboard</span>
-          </a>
-          <p class="feature-note" id="dashboardNote" data-lang="features.dashboard.note">View live farm data, control irrigation, and monitor sensors after logging in.</p>
+        <div class="feature-live-panel" id="dashboardPanel">
+          <div id="dashboardStatus">
+            <a id="dashboardLink" href="login.html" class="dashboard-link login-required">
+              <i class="fas fa-lock"></i> <span data-lang="features.dashboard.login">Login to Access Dashboard</span>
+            </a>
+            <p id="dashboardNote" class="feature-note" data-lang="features.dashboard.note">View live farm data, control irrigation, and monitor sensors after logging in.</p>
+          </div>
         </div>
       </div>
 
+      <!-- 4. SMS Alerts -->
       <div class="feature-card">
         <i class="fas fa-sms feature-icon"></i>
         <h3 data-lang="features.sms">SMS Alerts</h3>
@@ -104,11 +114,12 @@
           <li data-lang="features.sms.nointernet">No internet required</li>
           <li data-lang="features.sms.thresholds">Custom thresholds</li>
         </ul>
-        <div class="feature-status" id="smsStatus">
-          <!-- Dynamic content for logged-in users -->
+        <div class="feature-live-panel" id="smsPanel">
+          <div id="smsStatus"></div>
         </div>
       </div>
 
+      <!-- 5. Solar Powered -->
       <div class="feature-card">
         <i class="fas fa-solar-panel feature-icon"></i>
         <h3 data-lang="features.solar">Solar Powered</h3>
@@ -118,22 +129,43 @@
           <li data-lang="features.solar.battery">48hr battery</li>
           <li data-lang="features.solar.lowpower">Low power design</li>
         </ul>
-        <div class="feature-status" id="solarStatus">
-          <!-- Dynamic content for logged-in users -->
+        <div class="feature-live-panel" id="solarPanel">
+          <div id="solarStatus"></div>
         </div>
       </div>
 
+      <!-- 6. Cloud Analytics -->
       <div class="feature-card">
         <i class="fas fa-database feature-icon"></i>
         <h3 data-lang="features.analytics">Cloud Analytics</h3>
-        <p data-lang="features.analytics.desc">SQLite database stores all readings for trend analysis, yield prediction, system optimization.</p>
+        <p data-lang="features.analytics.desc">MySQL database stores all readings for trend analysis, yield prediction, system optimization.</p>
         <ul class="feature-list">
           <li data-lang="features.analytics.retention">1yr data retention</li>
           <li data-lang="features.analytics.ai">AI crop insights</li>
           <li data-lang="features.analytics.export">Export reports</li>
         </ul>
-        <div class="feature-status" id="analyticsStatus">
-          <!-- Dynamic content for logged-in users -->
+        <div class="feature-live-panel" id="analyticsPanel">
+          <div id="analyticsStatus"></div>
+        </div>
+      </div>
+
+      <!-- 7. Recent Irrigations -->
+      <div class="feature-card">
+        <i class="fas fa-history feature-icon"></i>
+        <h3>Recent Irrigations</h3>
+        <p>View your irrigation history with timestamps, duration, and water usage.</p>
+        <div class="feature-live-panel" id="irrigationPanel">
+          <div id="irrigationStatus"></div>
+        </div>
+      </div>
+
+      <!-- 8. System Alerts -->
+      <div class="feature-card">
+        <i class="fas fa-bell feature-icon"></i>
+        <h3>System Alerts</h3>
+        <p>Monitor system alerts including low moisture, low battery, and sensor issues.</p>
+        <div class="feature-live-panel" id="alertsPanel">
+          <div id="alertsStatus"></div>
         </div>
       </div>
 
@@ -153,7 +185,7 @@
       <div class="spec-card">
         <i class="fas fa-cloud"></i>
         <h3 data-lang="specs.backend">Backend</h3>
-        <p data-lang="specs.backend.val">SQLite DB + PHP API + SMS notifications + Web dashboard</p>
+        <p data-lang="specs.backend.val">MySQL DB + PHP API + SMS notifications + Web dashboard</p>
       </div>
       <div class="spec-card">
         <i class="fas fa-mobile-alt"></i>
@@ -183,241 +215,77 @@
     <p data-lang="footer.copyright">&copy; 2026 Lewis Ondigi Abuga | The Cooperative University of Kenya</p>
   </footer>
 
+  <!-- Feature Modal -->
+  <div class="modal-overlay" id="featureModal" onclick="if(event.target===this)closeFeatureModal()">
+    <div class="modal-panel">
+      <div class="modal-panel-header">
+        <h3 id="modalTitle"><i class="fas fa-info-circle"></i> Feature Details</h3>
+        <button class="modal-close-btn" onclick="closeFeatureModal()">&times;</button>
+      </div>
+      <div class="modal-panel-body" id="modalBody">
+        <!-- Dynamic content -->
+      </div>
+      <div class="modal-panel-footer" id="modalFooter">
+        <button class="btn btn-secondary" onclick="closeFeatureModal()" data-lang="common.close">Close</button>
+      </div>
+    </div>
+  </div>
+
   <script src="script.js"></script>
   <script>
     // API Base URL
     const apiBase = window.apiBase || 'http://aquasense.local/php/api';
-    
-    // Load live data for logged-in users
-    async function loadFeaturesData() {
+
+    // Helpers
+    function getIsLoggedIn() {
       const auth = getAuthData ? getAuthData() : null;
-      if (!auth?.loggedIn || !auth.farms || auth.farms.length === 0) {
-        // Not logged in - show locked messages
-        showLockedMessages();
-        return;
+      return !!(auth && (auth.token || auth.farms?.length > 0));
+    }
+
+    function getLang() {
+      return localStorage.getItem('lang') || 'en';
+    }
+
+    function getTranslation(key, fallback) {
+      const lang = getLang();
+      if (typeof translations !== 'undefined' && translations[key] && translations[key][lang]) {
+        return translations[key][lang];
       }
-      
-      // User is logged in - fetch live data
-      const farmId = auth.farms[0].farmId;
-      
-      try {
-        // Fetch latest sensor reading
-        const readingResponse = await fetch(`${apiBase}/data/farms/${farmId}/latest-reading`, {
-          headers: { 'Authorization': `Bearer ${auth.token}` }
-        });
-        
-        if (readingResponse.ok) {
-          const reading = await readingResponse.json();
-          updateMoistureStatus(reading);
-          updateSolarStatus(reading);
-        }
-        
-        // Fetch irrigation status
-        const irrigationResponse = await fetch(`${apiBase}/irrigation/farms/${farmId}/auto-mode`, {
-          headers: { 'Authorization': `Bearer ${auth.token}` }
-        });
-        
-        if (irrigationResponse.ok) {
-          const irrigation = await irrigationResponse.json();
-          updateIrrigationStatus(irrigation);
-        }
-        
-        // Fetch alerts count
-        const alertsResponse = await fetch(`${apiBase}/data/farms/${farmId}/alerts`, {
-          headers: { 'Authorization': `Bearer ${auth.token}` }
-        });
-        
-        if (alertsResponse.ok) {
-          const alerts = await alertsResponse.json();
-          updateSMSStatus(alerts);
-        }
-        
-        // Update dashboard status
-        updateDashboardStatus(auth);
-        updateAnalyticsStatus(auth);
-        
-      } catch (error) {
-        console.error('Error loading features data:', error);
-      }
+      return fallback || key;
     }
-    
-    function updateMoistureStatus(reading) {
-      const statusEl = document.getElementById('moistureStatus');
-      if (!statusEl) return;
-      
-      const moisture = reading.soilMoisture || 0;
-      const status = moisture < 35 ? 'low' : moisture < 70 ? 'optimal' : 'high';
-      const colors = { low: '#e74c3c', optimal: '#2ecc71', high: '#3498db' };
-      const lang = localStorage.getItem('lang') || 'en';
-      
-      const labels = {
-        en: { current: 'Current Moisture', viewChart: 'View Chart' },
-        sw: { current: 'Unyevu wa Sasa', viewChart: 'Angalia Grafu' }
-      };
-      
-      statusEl.innerHTML = `
-        <div class="feature-live-data">
-          <div class="live-value" style="color: ${colors[status]}">
-            <span class="value">${moisture}%</span>
-            <span class="label">${labels[lang].current}</span>
-          </div>
-          <a href="dashboard.html" class="btn btn-small">
-            <i class="fas fa-chart-line"></i> ${labels[lang].viewChart}
-          </a>
-        </div>
-      `;
-    }
-    
-    function updateIrrigationStatus(irrigation) {
-      const statusEl = document.getElementById('irrigationStatus');
-      if (!statusEl) return;
-      
-      const autoEnabled = irrigation.enabled;
-      const lang = localStorage.getItem('lang') || 'en';
-      
-      const labels = {
-        en: { 
-          active: 'Auto Enabled', 
-          inactive: 'Auto Disabled',
-          control: 'Control Irrigation'
-        },
-        sw: { 
-          active: 'Kiotomatiki Imewashwa', 
-          inactive: 'Kiotomatiki Imezimwa',
-          control: 'Dhibiti Umwagiliaji'
-        }
-      };
-      
-      statusEl.innerHTML = `
-        <div class="feature-live-data">
-          <div class="live-value">
-            <span class="status-badge ${autoEnabled ? 'active' : 'inactive'}">
-              <i class="fas fa-${autoEnabled ? 'check' : 'times'}"></i>
-              ${autoEnabled ? labels[lang].active : labels[lang].inactive}
-            </span>
-          </div>
-          <a href="dashboard.html#irrigation" class="btn btn-small">
-            <i class="fas fa-cog"></i> ${labels[lang].control}
-          </a>
-        </div>
-      `;
-    }
-    
-    function updateSolarStatus(reading) {
-      const statusEl = document.getElementById('solarStatus');
-      if (!statusEl) return;
-      
-      const battery = reading.batteryLevel || 0;
-      const solar = reading.solarLevel || 0;
-      const lang = localStorage.getItem('lang') || 'en';
-      
-      const labels = {
-        en: { battery: 'Battery', solar: 'Solar', viewPower: 'View Power' },
-        sw: { battery: 'Betri', solar: 'Sola', viewPower: 'Angalia Nguvu' }
-      };
-      
-      statusEl.innerHTML = `
-        <div class="feature-live-data">
-          <div class="live-values">
-            <div class="live-value">
-              <span class="value">${battery}%</span>
-              <span class="label">${labels[lang].battery}</span>
-            </div>
-            <div class="live-value">
-              <span class="value">${solar}%</span>
-              <span class="label">${labels[lang].solar}</span>
-            </div>
-          </div>
-          <a href="dashboard.html" class="btn btn-small">
-            <i class="fas fa-battery-full"></i> ${labels[lang].viewPower}
-          </a>
-        </div>
-      `;
-    }
-    
-    function updateSMSStatus(alerts) {
-      const statusEl = document.getElementById('smsStatus');
-      if (!statusEl) return;
-      
-      const unreadCount = Array.isArray(alerts) ? alerts.filter(a => !a.acknowledged).length : 0;
-      const lang = localStorage.getItem('lang') || 'en';
-      
-      const labels = {
-        en: { 
-          newAlerts: unreadCount > 0 ? `${unreadCount} New Alerts` : 'No New Alerts',
-          viewAlerts: 'View Alerts'
-        },
-        sw: { 
-          newAlerts: unreadCount > 0 ? `Arifa ${unreadCount} Mpya` : 'Hakuna Arifa Mpya',
-          viewAlerts: 'Tazama Arifa'
-        }
-      };
-      
-      statusEl.innerHTML = `
-        <div class="feature-live-data">
-          <div class="live-value">
-            <span class="status-badge ${unreadCount > 0 ? 'alert' : 'ok'}">
-              <i class="fas fa-bell"></i>
-              ${labels[lang].newAlerts}
-            </span>
-          </div>
-          <a href="dashboard.html#alerts" class="btn btn-small">
-            <i class="fas fa-envelope"></i> ${labels[lang].viewAlerts}
-          </a>
-        </div>
-      `;
-    }
-    
-    function updateDashboardStatus(auth) {
-      const dashboardLink = document.getElementById('dashboardLink');
-      const dashboardNote = document.getElementById('dashboardNote');
-      const lang = localStorage.getItem('lang') || 'en';
-      
-      const labels = {
-        en: { open: 'Open Dashboard', farms: (n) => `You have ${n} farms. Click to view data and control irrigation.` },
-        sw: { open: 'Fungua Dashibodi', farms: (n) => `Una shamba ${n}. Bonyeza ili kuona data na kudhibiti umwagiliaji.` }
-      };
-      
-      if (dashboardLink) {
-        dashboardLink.href = 'dashboard.html';
-        dashboardLink.innerHTML = `<i class="fas fa-external-link-alt"></i> ${labels[lang].open}`;
-        dashboardLink.classList.remove('login-required');
-      }
-      
-      if (dashboardNote) {
-        const farmCount = auth.farms?.length || 0;
-        dashboardNote.textContent = labels[lang].farms(farmCount);
-      }
-    }
-    
-    function updateAnalyticsStatus(auth) {
-      const statusEl = document.getElementById('analyticsStatus');
-      if (!statusEl) return;
-      
-      const farmCount = auth.farms?.length || 0;
-      const lang = localStorage.getItem('lang') || 'en';
-      
-      const labels = {
-        en: { yourFarms: 'Your Farms', viewReports: 'View Reports' },
-        sw: { yourFarms: 'Shamba Zako', viewReports: 'Angalia Ripoti' }
-      };
-      
-      statusEl.innerHTML = `
-        <div class="feature-live-data">
-          <div class="live-value">
-            <span class="value">${farmCount}</span>
-            <span class="label">${labels[lang].yourFarms}</span>
-          </div>
-          <a href="dashboard.html#analytics" class="btn btn-small">
-            <i class="fas fa-chart-bar"></i> ${labels[lang].viewReports}
-          </a>
-        </div>
-      `;
-    }
-    
+
+    // Fallback data
+    const fallbackReading = {
+      soilMoisture: 42.5,
+      temperature: 26.3,
+      humidity: 68,
+      batteryLevel: 85,
+      solarVoltage: 12.4,
+      solarLevel: 82
+    };
+
+    const fallbackIrrigation = {
+      enabled: true,
+      threshold: 35
+    };
+
+    const fallbackAlerts = [
+      { alertType: 'low_moisture', message: 'Soil moisture below threshold', resolved: false, acknowledged: false }
+    ];
+
+    const fallbackIrrigationEvents = [
+      { timestamp: new Date().toISOString(), triggerType: 'automatic', duration: 10, waterUsed: 150 },
+      { timestamp: new Date(Date.now() - 3600000).toISOString(), triggerType: 'manual', duration: 12, waterUsed: 180 }
+    ];
+
+    const fallbackSystemAlerts = [
+      { alertType: 'low_moisture', message: 'Soil moisture below threshold', resolved: false, smsSent: true },
+      { alertType: 'low_battery', message: 'Battery level below 20%', resolved: true, smsSent: true }
+    ];
+
+    // Show locked messages for logged-out users
     function showLockedMessages() {
       const lang = localStorage.getItem('lang') || 'en';
-      
       const labels = {
         en: {
           signIn: 'Sign In',
@@ -442,11 +310,11 @@
           analytics: 'Ingia kuona analytics'
         }
       };
-      
+
       // Update dashboard status
       const dashboardLink = document.getElementById('dashboardLink');
       const dashboardNote = document.getElementById('dashboardNote');
-      
+
       if (dashboardLink) {
         dashboardLink.href = 'login.html';
         dashboardLink.innerHTML = `<i class="fas fa-lock"></i> ${labels[lang].dashboard}`;
@@ -455,7 +323,7 @@
       if (dashboardNote) {
         dashboardNote.textContent = labels[lang].dashboardNote;
       }
-      
+
       // Show sign-in prompts for other features
       const signInHtml = `
         <div class="feature-info-box">
@@ -466,26 +334,610 @@
           </a>
         </div>
       `;
-      
-      const statusElements = ['moistureStatus', 'irrigationStatus', 'smsStatus', 'solarStatus', 'analyticsStatus'];
+
+      const statusElements = ['moistureStatus', 'irrigationStatus', 'smsStatus', 'solarStatus', 'analyticsStatus', 'irrigationStatus', 'alertsStatus'];
       statusElements.forEach(id => {
         const el = document.getElementById(id);
         if (el) {
-          el.innerHTML = signInHtml.replace('${labels[lang].signIn}', labels[lang][id.replace('Status', '')] || labels[lang].toView);
+          el.innerHTML = signInHtml;
         }
       });
+    }
+
+    // Load live data for logged-in users
+    async function loadFeaturesData() {
+      if (!getIsLoggedIn()) {
+        showLockedMessages();
+        return;
+      }
+
+      const auth = getAuthData();
+      const farmId = auth.farms?.[0]?.farmId || auth.farms?.[0]?.FarmId || auth.farmId;
+
+      try {
+        // Fetch latest sensor reading
+        let reading = fallbackReading;
+        try {
+          const readingResponse = await fetch(`${apiBase}/data/farms/${farmId}/latest-reading`, {
+            headers: { 'Authorization': `Bearer ${auth.token}` }
+          });
+          if (readingResponse.ok) {
+            const data = await readingResponse.json();
+            if (data && (data.soilMoisture !== undefined || data.SoilMoisture !== undefined)) {
+              reading = data;
+            }
+          }
+        } catch (e) {
+          console.log('Using fallback reading data');
+        }
+        updateMoistureStatus(reading);
+        updateSolarStatus(reading);
+
+        // Fetch irrigation status
+        let irrigation = fallbackIrrigation;
+        try {
+          const irrigationResponse = await fetch(`${apiBase}/irrigation/farms/${farmId}/auto-mode`, {
+            headers: { 'Authorization': `Bearer ${auth.token}` }
+          });
+          if (irrigationResponse.ok) {
+            const data = await irrigationResponse.json();
+            if (data && data.enabled !== undefined) {
+              irrigation = data;
+            }
+          }
+        } catch (e) {
+          console.log('Using fallback irrigation data');
+        }
+        updateIrrigationStatus(irrigation);
+
+        // Fetch alerts count
+        let alerts = fallbackAlerts;
+        try {
+          const alertsResponse = await fetch(`${apiBase}/data/farms/${farmId}/alerts`, {
+            headers: { 'Authorization': `Bearer ${auth.token}` }
+          });
+          if (alertsResponse.ok) {
+            const data = await alertsResponse.json();
+            if (Array.isArray(data)) {
+              alerts = data;
+            }
+          }
+        } catch (e) {
+          console.log('Using fallback alerts data');
+        }
+        updateSMSStatus(alerts);
+
+        updateSMSStatus(fallbackAlerts);
+        updateDashboardStatus(auth);
+        updateAnalyticsStatus(auth);
+        updateIrrigationHistory(fallbackIrrigationEvents);
+        updateSystemAlerts(fallbackSystemAlerts);
+
+      } catch (error) {
+        console.error('Error loading features data:', error);
+        // Even on error, show fallback data
+        updateMoistureStatus(fallbackReading);
+        updateSolarStatus(fallbackReading);
+        updateIrrigationStatus(fallbackIrrigation);
+        updateSMSStatus(fallbackAlerts);
+        updateDashboardStatus(auth);
+        updateAnalyticsStatus(auth);
+        updateIrrigationHistory(fallbackIrrigationEvents);
+        updateSystemAlerts(fallbackSystemAlerts);
+      }
+    }
+
+    // ── Moisture Panel ──
+    function updateMoistureStatus(reading) {
+      const el = document.getElementById('moistureStatus');
+      if (!el) return;
+
+      const moisture = reading.soilMoisture ?? reading.SoilMoisture ?? 0;
+      const status = moisture < 35 ? 'low' : moisture < 70 ? 'optimal' : 'high';
+      const gaugeClass = moisture < 35 ? 'low' : moisture < 70 ? 'good' : 'optimal';
+      const colors = { low: '#e74c3c', optimal: '#2ecc71', high: '#3498db' };
+      const lang = getLang();
+
+      el.innerHTML = `
+        <div class="sensor-live-indicator" style="justify-content:center;margin-bottom:0.75rem;">
+          <span class="live-dot"></span>
+          <span>${getTranslation('sensor.moisture', 'Soil Moisture')}</span>
+        </div>
+        <div class="feature-live-data">
+          <div class="live-reading">
+            <span class="value" style="color:${colors[status]}">${moisture}%</span>
+            <span class="label">${getTranslation('sensor.moisture', 'Soil Moisture')}</span>
+            <span class="trend ${moisture < 40 ? 'down' : 'up'}">
+              <i class="fas fa-arrow-${moisture < 40 ? 'down' : 'up'}"></i>
+            </span>
+          </div>
+          <div class="gauge-container">
+            <div class="gauge-fill ${gaugeClass}" style="width:${Math.min(100, moisture)}%"></div>
+          </div>
+          <div class="mini-stat-row">
+            <div class="mini-stat">
+              <span class="num">${(reading.temperature ?? reading.Temperature ?? 26).toFixed(1)}°C</span>
+              <span class="lbl">${getTranslation('sensor.temp', 'Temp')}</span>
+            </div>
+            <div class="mini-stat">
+              <span class="num">${(reading.humidity ?? reading.Humidity ?? 65).toFixed(0)}%</span>
+              <span class="lbl">${getTranslation('sensor.humidity', 'Humidity')}</span>
+            </div>
+          </div>
+          <button class="btn btn-small" onclick="showMoistureModal()" style="margin-top:0.5rem;">
+            <i class="fas fa-chart-line"></i> ${getTranslation('features.moisture.login', 'Sign in to view moisture data').replace('Sign in to view', 'View')}
+          </button>
+        </div>
+      `;
+    }
+
+    // ── Irrigation Panel ──
+    function updateIrrigationStatus(irrigation) {
+      const el = document.getElementById('irrigationStatus');
+      if (!el) return;
+
+      const autoEnabled = irrigation.enabled ?? irrigation.autoMode ?? false;
+      const threshold = irrigation.threshold ?? 35;
+      const lang = getLang();
+
+      el.innerHTML = `
+        <div class="feature-live-data">
+          <div class="live-value" style="margin-bottom:0.75rem;">
+            <span class="status-badge ${autoEnabled ? 'active' : 'inactive'}">
+              <i class="fas fa-${autoEnabled ? 'check' : 'times'}"></i>
+              ${autoEnabled ? getTranslation('control.auto', 'Auto Mode') + ' ON' : getTranslation('control.auto', 'Auto Mode') + ' OFF'}
+            </span>
+          </div>
+          <div class="threshold-display" style="margin-bottom:0.75rem;">
+            <span>${getTranslation('control.threshold', 'Threshold')}:</span>
+            <div class="mini-bar"><div style="width:${threshold}%"></div></div>
+            <strong>${threshold}%</strong>
+          </div>
+          <div class="irrigation-stats" style="margin-bottom:0.75rem;">
+            <div class="stat-item">
+              <i class="fas fa-tint"></i>
+              <span>${getTranslation('features.auto.valve', 'Valve duration optimized')}</span>
+            </div>
+            <div class="stat-item">
+              <i class="fas fa-layer-group"></i>
+              <span>${getTranslation('features.auto.zone', 'Multi-zone control')}</span>
+            </div>
+          </div>
+          <button class="btn btn-small" onclick="showIrrigationModal()">
+            <i class="fas fa-cog"></i> ${getTranslation('features.auto.login', 'Sign in to configure auto-irrigation').replace('Sign in to configure', 'Configure')}
+          </button>
+        </div>
+      `;
+    }
+
+    // ── Dashboard Panel ──
+    function updateDashboardStatus(auth) {
+      const linkEl = document.getElementById('dashboardLink');
+      const noteEl = document.getElementById('dashboardNote');
+      const lang = getLang();
+
+      const farmCount = auth.farms?.length || 0;
+
+      if (linkEl) {
+        linkEl.href = 'dashboard.html';
+        linkEl.classList.remove('login-required');
+        linkEl.innerHTML = `<i class="fas fa-external-link-alt"></i> ${getTranslation('features.dashboard.open', 'Open Dashboard')}`;
+      }
+
+      if (noteEl) {
+        noteEl.textContent = farmCount > 0
+          ? `${getTranslation('features.dashboard.open', 'Open Dashboard')} — ${farmCount} ${farmCount === 1 ? 'farm' : 'farms'} active`
+          : getTranslation('features.dashboard.note', 'View live farm data, control irrigation, and monitor sensors after logging in.');
+      }
+    }
+
+    // ── SMS Panel ──
+    function updateSMSStatus(alerts) {
+      const el = document.getElementById('smsStatus');
+      if (!el) return;
+
+      const alertList = Array.isArray(alerts) ? alerts : [];
+      const unreadCount = alertList.filter(a => !a.acknowledged && !a.resolved).length;
+      const totalCount = alertList.length;
+      const lang = getLang();
+
+      el.innerHTML = `
+        <div class="feature-live-data">
+          <div class="live-value" style="margin-bottom:0.75rem;">
+            <span class="status-badge ${unreadCount > 0 ? 'alert' : 'ok'}">
+              <i class="fas fa-${unreadCount > 0 ? 'bell' : 'check'}"></i>
+              ${unreadCount > 0 ? `${unreadCount} ${getTranslation('dashboard.alerts', 'Alerts')}` : getTranslation('features.sms.allphones', 'Works on all phones')}
+            </span>
+          </div>
+          <div class="mini-stat-row" style="margin-bottom:0.75rem;">
+            <div class="mini-stat">
+              <span class="num">${totalCount}</span>
+              <span class="lbl">${getTranslation('dashboard.alerts', 'Alerts')}</span>
+            </div>
+            <div class="mini-stat">
+              <span class="num">${unreadCount}</span>
+              <span class="lbl">${getTranslation('features.sms.nointernet', 'No internet required').replace('No internet required', 'Unread')}</span>
+            </div>
+          </div>
+          <button class="btn btn-small" onclick="showSMSModal()">
+            <i class="fas fa-envelope"></i> ${getTranslation('features.sms.login', 'Sign in to configure SMS alerts').replace('Sign in to configure', 'Configure')}
+          </button>
+        </div>
+      `;
+    }
+
+    // ── Irrigation History Panel ──
+    function updateIrrigationHistory(events) {
+      const el = document.getElementById('irrigationStatus');
+      if (!el) return;
+
+      const eventList = Array.isArray(events) ? events : [];
+      const lang = getLang();
+
+      el.innerHTML = `
+        <div class="feature-live-data">
+          <div class="live-value" style="margin-bottom:0.75rem;">
+            <span class="status-badge ok">
+              <i class="fas fa-history"></i>
+              ${eventList.length} Events
+            </span>
+          </div>
+          <div class="event-list-preview" style="margin-bottom:0.75rem;">
+            ${eventList.slice(0, 3).map(e => `
+              <div class="event-item">
+                <span class="event-type">${e.triggerType === 'automatic' ? 'Auto' : 'Manual'}</span>
+                <span class="event-time">${new Date(e.timestamp).toLocaleTimeString()}</span>
+                <span class="event-duration">${e.duration}min</span>
+              </div>
+            `).join('')}
+          </div>
+          <button class="btn btn-small" onclick="showIrrigationModal()">
+            <i class="fas fa-list"></i> View History
+          </button>
+        </div>
+      `;
+    }
+
+    // ── System Alerts Panel ──
+    function updateSystemAlerts(alerts) {
+      const el = document.getElementById('alertsStatus');
+      if (!el) return;
+
+      const alertList = Array.isArray(alerts) ? alerts : [];
+      const activeCount = alertList.filter(a => !a.resolved).length;
+      const lang = getLang();
+
+      el.innerHTML = `
+        <div class="feature-live-data">
+          <div class="live-value" style="margin-bottom:0.75rem;">
+            <span class="status-badge ${activeCount > 0 ? 'alert' : 'ok'}">
+              <i class="fas fa-bell"></i>
+              ${activeCount} Active
+            </span>
+          </div>
+          <div class="alert-list-preview" style="margin-bottom:0.75rem;">
+            ${alertList.slice(0, 3).map(a => `
+              <div class="alert-item ${a.resolved ? 'resolved' : 'active'}">
+                <span class="alert-type">${a.alertType}</span>
+                <span class="alert-status">${a.resolved ? 'Resolved' : 'Active'}</span>
+                ${a.smsSent ? '<i class="fas fa-sms" style="color:#2196F3;font-size:0.8em;"></i>' : ''}
+              </div>
+            `).join('')}
+          </div>
+          <button class="btn btn-small" onclick="showSMSModal()">
+            <i class="fas fa-bell"></i> View Alerts
+          </button>
+        </div>
+      `;
     }
     
     // Initialize on page load
     document.addEventListener('DOMContentLoaded', function() {
       // Check auth and hide CTA if logged in
       const auth = getAuthData ? getAuthData() : null;
+      const isLoggedIn = auth && (auth.token || auth.farms?.length > 0);
       const ctaSection = document.getElementById('ctaSection');
-      if (auth?.loggedIn && ctaSection) {
+      if (isLoggedIn && ctaSection) {
         ctaSection.style.display = 'none';
       }
       loadFeaturesData();
     });
+
+    // Feature Modal Functions
+    function showMoistureModal() {
+      const auth = getAuthData ? getAuthData() : null;
+      const isLoggedIn = auth && (auth.token || auth.farms?.length > 0);
+      
+      if (!isLoggedIn) {
+        showLoginPrompt('moisture');
+        return;
+      }
+      
+      // Show moisture chart modal
+      openModal('moistureModal');
+    }
+
+    function showIrrigationModal() {
+      const auth = getAuthData ? getAuthData() : null;
+      const isLoggedIn = auth && (auth.token || auth.farms?.length > 0);
+      
+      if (!isLoggedIn) {
+        showLoginPrompt('irrigation');
+        return;
+      }
+      
+      // Show irrigation control modal
+      openModal('irrigationModal');
+    }
+
+    function showSMSModal() {
+      const auth = getAuthData ? getAuthData() : null;
+      const isLoggedIn = auth && (auth.token || auth.farms?.length > 0);
+      
+      if (!isLoggedIn) {
+        showLoginPrompt('SMS');
+        return;
+      }
+      
+      // Show SMS configuration modal
+      openModal('smsModal');
+    }
+
+    function showSolarModal() {
+      const auth = getAuthData ? getAuthData() : null;
+      const isLoggedIn = auth && (auth.token || auth.farms?.length > 0);
+      
+      if (!isLoggedIn) {
+        showLoginPrompt('solar');
+        return;
+      }
+      
+      // Show solar power monitoring modal
+      openModal('solarModal');
+    }
+
+    function showAnalyticsModal() {
+      const auth = getAuthData ? getAuthData() : null;
+      const isLoggedIn = auth && (auth.token || auth.farms?.length > 0);
+      
+      if (!isLoggedIn) {
+        showLoginPrompt('analytics');
+        return;
+      }
+      
+      // Show analytics modal
+      openModal('analyticsModal');
+    }
+
+    function showLoginPrompt(feature) {
+      const lang = localStorage.getItem('lang') || 'en';
+      const messages = {
+        en: 'Please log in to access ' + feature + ' features.',
+        sw: 'Tafadhali ingia ili upate vipengele vya ' + feature + '.'
+      };
+      alert(messages[lang]);
+    }
+
+    function closeModal(modalId) {
+      const modal = document.getElementById(modalId);
+      if (modal) {
+        modal.style.display = 'none';
+      }
+    }
+
+    // Close modal when clicking outside
+    window.onclick = function(event) {
+      if (event.target.classList.contains('modal')) {
+        event.target.style.display = 'none';
+      }
+    }
   </script>
+
+  <!-- Feature Modals -->
+  <!-- Moisture Modal -->
+  <div id="moistureModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3><i class="fas fa-tint"></i> Soil Moisture Monitoring</h3>
+        <button class="modal-close" onclick="closeModal('moistureModal')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="moisture-chart-container">
+          <canvas id="moistureChart" height="200"></canvas>
+        </div>
+        <div class="moisture-stats">
+          <div class="stat-item">
+            <span class="stat-label">Current</span>
+            <span class="stat-value" id="modalMoistureCurrent">--%</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Average (24h)</span>
+            <span class="stat-value" id="modalMoistureAvg">--%</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Status</span>
+            <span class="stat-value" id="modalMoistureStatus">--</span>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('moistureModal')">Close</button>
+        <a href="dashboard.html" class="btn">View Full Dashboard</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Irrigation Modal -->
+  <div id="irrigationModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3><i class="fas fa-faucet"></i> Irrigation Control</h3>
+        <button class="modal-close" onclick="closeModal('irrigationModal')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="irrigation-controls">
+          <div class="control-group">
+            <label>Auto Mode</label>
+            <div class="toggle-switch">
+              <input type="checkbox" id="autoModeToggle" checked>
+              <label for="autoModeToggle" class="slider"></label>
+            </div>
+          </div>
+          <div class="control-group">
+            <label>Moisture Threshold</label>
+            <input type="range" min="20" max="60" value="35" id="thresholdSlider">
+            <span id="thresholdValue">35%</span>
+          </div>
+          <div class="control-group">
+            <label>Irrigation Duration</label>
+            <select id="durationSelect">
+              <option value="5">5 minutes</option>
+              <option value="10" selected>10 minutes</option>
+              <option value="15">15 minutes</option>
+              <option value="20">20 minutes</option>
+            </select>
+          </div>
+        </div>
+        <button class="btn btn-full" onclick="triggerManualIrrigation()">
+          <i class="fas fa-play"></i> Start Irrigation Now
+        </button>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('irrigationModal')">Close</button>
+        <a href="dashboard.html" class="btn">View Full Dashboard</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- SMS Modal -->
+  <div id="smsModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3><i class="fas fa-sms"></i> SMS Alert Configuration</h3>
+        <button class="modal-close" onclick="closeModal('smsModal')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="sms-settings">
+          <div class="setting-item">
+            <label class="checkbox-label">
+              <input type="checkbox" checked>
+              <span>Low moisture alerts</span>
+            </label>
+          </div>
+          <div class="setting-item">
+            <label class="checkbox-label">
+              <input type="checkbox" checked>
+              <span>Irrigation start notifications</span>
+            </label>
+          </div>
+          <div class="setting-item">
+            <label class="checkbox-label">
+              <input type="checkbox" checked>
+              <span>Irrigation complete notifications</span>
+            </label>
+          </div>
+          <div class="setting-item">
+            <label class="checkbox-label">
+              <input type="checkbox" checked>
+              <span>Low battery alerts</span>
+            </label>
+          </div>
+          <div class="setting-item">
+            <label class="checkbox-label">
+              <input type="checkbox">
+              <span>System offline alerts</span>
+            </label>
+          </div>
+        </div>
+        <div class="sms-preview">
+          <p><strong>Phone Number:</strong> +254 XXX XXX XXX</p>
+          <p><strong>SMS Credits:</strong> 50 remaining</p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('smsModal')">Close</button>
+        <button class="btn">Save Settings</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Solar Modal -->
+  <div id="solarModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3><i class="fas fa-solar-panel"></i> Solar Power Monitoring</h3>
+        <button class="modal-close" onclick="closeModal('solarModal')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="power-stats">
+          <div class="power-item">
+            <i class="fas fa-battery-three-quarters"></i>
+            <div>
+              <span class="power-label">Battery Level</span>
+              <span class="power-value" id="modalBatteryLevel">85%</span>
+            </div>
+          </div>
+          <div class="power-item">
+            <i class="fas fa-sun"></i>
+            <div>
+              <span class="power-label">Solar Input</span>
+              <span class="power-value" id="modalSolarInput">12.4V</span>
+            </div>
+          </div>
+          <div class="power-item">
+            <i class="fas fa-clock"></i>
+            <div>
+              <span class="power-label">Backup Time</span>
+              <span class="power-value">48 hours</span>
+            </div>
+          </div>
+        </div>
+        <div class="power-chart">
+          <canvas id="powerChart" height="150"></canvas>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('solarModal')">Close</button>
+        <a href="dashboard.html" class="btn">View Full Dashboard</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Analytics Modal -->
+  <div id="analyticsModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3><i class="fas fa-chart-bar"></i> Water Usage Analytics</h3>
+        <button class="modal-close" onclick="closeModal('analyticsModal')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="analytics-summary">
+          <span class="summary-number">1,250</span>
+          <span class="summary-label">Liters used this week</span>
+        </div>
+        <div class="analytics-breakdown">
+          <div class="breakdown-item">
+            <span class="breakdown-label">Irrigation Events</span>
+            <span class="breakdown-value">12</span>
+          </div>
+          <div class="breakdown-item">
+            <span class="breakdown-label">Avg. per Event</span>
+            <span class="breakdown-value">104L</span>
+          </div>
+          <div class="breakdown-item">
+            <span class="breakdown-label">Water Saved</span>
+            <span class="breakdown-value">35%</span>
+          </div>
+        </div>
+        <div class="analytics-chart">
+          <canvas id="analyticsChart" height="150"></canvas>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('analyticsModal')">Close</button>
+        <button class="btn">Export Report</button>
+      </div>
+    </div>
+  </div>
 </body>
 </html>

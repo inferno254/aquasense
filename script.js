@@ -152,76 +152,7 @@ async function handleLogin(event) {
     window.location.href = "dashboard.html";
   } catch (error) {
     console.error("Login error in handleLogin:", error);
-    
-    // Demo mode bypass for testing
-    if (email === 'admin@example.com' && password === 'password123') {
-      console.log("Activating demo mode bypass...");
-      setAuthData(normalizeAuthDataShape({
-        loggedIn: true,
-        user: { 
-          email: 'admin@example.com', 
-          name: 'Lewis Abuga',
-          userId: '22222222-2222-2222-2222-222222222222',
-          role: 'farmer'
-        },
-        farms: [{
-          farmId: '550e8400-e29b-41d4-a716-446655440002',
-          location: 'Demo Farm',
-          cropType: 'Maize',
-          size: 2.5
-        }],
-        token: 'demo-token-12345',
-        farmId: '550e8400-e29b-41d4-a716-446655440002'
-      }));
-      window.location.href = "dashboard.html";
-      return;
-    }
-    
-    // Lewis Abuga account bypass - admin@example.com
-    if (email === 'admin@example.com' && password === 'password123') {
-      console.log("Activating Lewis Abuga account...");
-      setAuthData(normalizeAuthDataShape({
-        loggedIn: true,
-        user: { 
-          email: 'admin@example.com', 
-          name: 'Lewis Abuga',
-          userId: '22222222-2222-2222-2222-222222222222',
-          role: 'admin'
-        },
-        farms: [
-          {
-            farmId: '550e8400-e29b-41d4-a716-446655440002',
-            location: 'Gataka Farm',
-            cropType: 'Maize',
-            size: 1.5
-          },
-          {
-            farmId: '550e8400-e29b-41d4-a716-446655440005',
-            location: 'Hardy Farm',
-            cropType: 'Tomatoes',
-            size: 2.0
-          }
-        ],
-        token: 'admin-token-12345',
-        farmId: '550e8400-e29b-41d4-a716-446655440002'
-      }));
-      window.location.href = "dashboard.html";
-      return;
-    }
-    
-    const localUser = findLocalUser(email);
-    if (localUser && localUser.password === password) {
-      setAuthData(normalizeAuthDataShape({
-        loggedIn: true,
-        user: { email: localUser.email, name: localUser.name },
-        farms: [],
-        token: null
-      }));
-      alert("Local login successful. Redirecting to your dashboard...");
-      window.location.href = "dashboard.html";
-    } else {
-      alert(`Login failed: ${error.message || "Invalid credentials. Please check your email and password."}`);
-    }
+    alert(`Login failed: ${error.message || "Invalid credentials. Please check your email and password."}`);
   } finally {
     setButtonBusy(loginBtn, loginText, loginSpinner, false, "Sign In");
     event.target.reset();
@@ -390,10 +321,13 @@ function updateLoginIcons() {
   const auth = getAuthData();
   const loginIcons = document.querySelectorAll(".login-icon");
 
+  // Check if user is logged in: auth exists and has token or farms
+  const isLoggedIn = auth && (auth.token || auth.farms?.length > 0);
+
   loginIcons.forEach((icon) => {
-    if (auth?.loggedIn) {
+    if (isLoggedIn) {
       icon.innerHTML = '<i class="fas fa-user-check"></i>';
-      icon.title = `${auth.user?.email || auth.user?.name || "Dashboard"}`;
+      icon.title = `${auth.user?.email || auth.user?.name || auth.email || auth.name || "Dashboard"}`;
       icon.href = "dashboard.html";
     } else {
       icon.innerHTML = '<i class="fas fa-user-circle"></i>';
@@ -401,10 +335,85 @@ function updateLoginIcons() {
       icon.href = "login.html";
     }
   });
+
+  // Update navigation links
+  const navLinks = document.querySelector(".nav-links");
+  if (navLinks) {
+    const loginLink = navLinks.querySelector('a[href="login.html"]');
+    const registerLink = navLinks.querySelector('a[href="register.html"]');
+    
+    if (isLoggedIn) {
+      // Hide login and register
+      if (loginLink) loginLink.style.display = 'none';
+      if (registerLink) registerLink.style.display = 'none';
+    } else {
+      // Show login and register
+      if (loginLink) loginLink.style.display = '';
+      if (registerLink) registerLink.style.display = '';
+    }
+    
+    // Remove loading state to prevent flickering
+    navLinks.classList.remove('auth-loading');
+  }
 }
+
+// Initialize auth state immediately to prevent flickering
+(function initAuthState() {
+  const auth = getAuthData();
+  const isLoggedIn = auth && (auth.token || auth.farms?.length > 0);
+  const navLinks = document.querySelector(".nav-links");
+  
+  if (navLinks) {
+    // Add loading class to hide navigation during auth check
+    navLinks.classList.add('auth-loading');
+    
+    // Set initial state based on auth to prevent flicker
+    const loginLink = navLinks.querySelector('a[href="login.html"]');
+    const registerLink = navLinks.querySelector('a[href="register.html"]');
+    
+    if (isLoggedIn) {
+      if (loginLink) loginLink.style.display = 'none';
+      if (registerLink) registerLink.style.display = 'none';
+    }
+  }
+})();
+
+// Dark Mode Toggle
+function toggleDarkMode() {
+  document.body.classList.toggle('dark-mode');
+  const isDarkMode = document.body.classList.contains('dark-mode');
+  localStorage.setItem('darkMode', isDarkMode);
+  
+  // Update icon
+  const icon = document.getElementById('darkModeIcon');
+  if (icon) {
+    icon.className = isDarkMode ? 'fas fa-sun' : 'fas fa-moon';
+  }
+  
+  // Dispatch custom event so charts and other components can react
+  window.dispatchEvent(new CustomEvent('darkmodechange', { detail: { isDarkMode } }));
+}
+
+// Initialize dark mode from localStorage
+(function initDarkMode() {
+  const darkMode = localStorage.getItem('darkMode') === 'true';
+  if (darkMode) {
+    document.body.classList.add('dark-mode');
+    const icon = document.getElementById('darkModeIcon');
+    if (icon) {
+      icon.className = 'fas fa-sun';
+    }
+  }
+})();
 
 function logout() {
   clearAuthData();
+  // Clear all dashboard-related localStorage items
+  localStorage.removeItem('irrigationEvents');
+  localStorage.removeItem('lastIrrigationTime');
+  localStorage.removeItem('moistureThreshold');
+  localStorage.removeItem('autoModeEnabled');
+  localStorage.removeItem('dashboardState');
   window.location.href = "login.html";
 }
 
@@ -1209,7 +1218,7 @@ const translations = {
   "features.solar.login": { en: "Sign in to monitor power levels", sw: "Ingia kufuatilia viwango vya nguvu" },
   
   "features.analytics": { en: "Cloud Analytics", sw: "Analytics ya Wingu" },
-  "features.analytics.desc": { en: "SQLite database stores all readings for trend analysis, yield prediction, system optimization.", sw: "Hifadhidata ya SQLite inahifadhi masomo yote kwa uchanganuzi wa mwelekeo, utabiri wa mavuno." },
+  "features.analytics.desc": { en: "MySQL database stores all readings for trend analysis, yield prediction, system optimization.", sw: "Hifadhidata ya MySQL inahifadhi masomo yote kwa uchanganuzi wa mwelekeo, utabiri wa mavuno." },
   "features.analytics.retention": { en: "1yr data retention", sw: "Kuhifadhi data kwa mwaka 1" },
   "features.analytics.ai": { en: "AI crop insights", sw: "Maoni ya mimea kwa AI" },
   "features.analytics.export": { en: "Export reports", sw: "Ripoti za kuhamisha" },
@@ -1220,7 +1229,7 @@ const translations = {
   "specs.hardware": { en: "Hardware", sw: "Vifaa vya Kihisia" },
   "specs.hardware.val": { en: "ESP32 + Capacitive sensors + Solenoid valve + Solar 10W + Battery 48hr", sw: "ESP32 + Vihisi vya uwezo + Vali ya solenoid + Sola 10W + Betri 48hr" },
   "specs.backend": { en: "Backend", sw: "Backend" },
-  "specs.backend.val": { en: "SQLite DB + PHP API + SMS notifications + Web dashboard", sw: "Hifadhidata SQLite + PHP API + Arifa za SMS + Dashibodi ya Mtandao" },
+  "specs.backend.val": { en: "MySQL DB + PHP API + SMS notifications + Web dashboard", sw: "Hifadhidata MySQL + PHP API + Arifa za SMS + Dashibodi ya Mtandao" },
   "specs.mobile": { en: "Mobile", sw: "Simu" },
   "specs.mobile.val": { en: "Responsive PWA + SMS fallback + Offline sync", sw: "PWA inayoitikia + Arifa za SMS + Usawishaji nje ya mtandao" },
   
